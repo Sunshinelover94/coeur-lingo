@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#7b2d52"/>
+<title>Cœur·Lingo — Apprends l'allemand</title>
+<link rel="manifest" href="manifest.webmanifest"/>
+<link rel="apple-touch-icon" href="icon-192.png"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<style>
+:root{
+  --coral:#ff6b6b; --coral-d:#e8516a; --plum:#7b2d52; --plum-d:#5a1f3c;
+  --gold:#f4b942; --bg:#fff7f3; --card:#ffffff; --ink:#2c1a24; --muted:#8a6f7c;
+  --good:#28a878; --bad:#e8516a; --line:#f0dfe4; --shadow:0 6px 22px rgba(123,45,82,.10);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.45;
+  padding-bottom:calc(72px + env(safe-area-inset-bottom));max-width:520px;margin:0 auto;}
+h1,h2,h3{margin:0 0 .4em;line-height:1.2}
+button{font-family:inherit;cursor:pointer;border:none}
+.hidden{display:none!important}
+header{position:sticky;top:0;z-index:30;background:linear-gradient(135deg,var(--plum),var(--plum-d));
+  color:#fff;padding:calc(env(safe-area-inset-top) + 12px) 16px 12px;}
+.hrow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.brand{font-weight:800;letter-spacing:.3px;font-size:18px;display:flex;align-items:center;gap:7px}
+.streakpill{background:rgba(255,255,255,.16);border-radius:999px;padding:5px 11px;font-weight:700;font-size:14px;display:flex;align-items:center;gap:5px}
+.iconbtn{background:rgba(255,255,255,.14);color:#fff;border-radius:10px;width:38px;height:38px;font-size:18px}
+.xpbar{height:7px;background:rgba(255,255,255,.2);border-radius:999px;margin-top:12px;overflow:hidden}
+.xpbar>i{display:block;height:100%;background:var(--gold);border-radius:999px;transition:width .5s}
+.xpmeta{display:flex;justify-content:space-between;font-size:12px;opacity:.9;margin-top:5px}
+main{padding:16px}
+.view{animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.card{background:var(--card);border-radius:18px;box-shadow:var(--shadow);padding:18px;margin-bottom:14px}
+.card h2{font-size:17px}
+.muted{color:var(--muted)}.sm{font-size:13px}.center{text-align:center}
+.big-cta{width:100%;background:linear-gradient(135deg,var(--coral),var(--coral-d));color:#fff;
+  font-size:18px;font-weight:800;padding:18px;border-radius:16px;box-shadow:0 8px 20px rgba(232,81,106,.35)}
+.big-cta:active{transform:scale(.98)}
+.btn{background:var(--plum);color:#fff;padding:12px 16px;border-radius:12px;font-weight:700;font-size:15px}
+.btn.ghost{background:#fff;color:var(--plum);border:1.5px solid var(--line)}
+.btn.gold{background:var(--gold);color:#5a3a00}
+.btn.block{width:100%;display:block;text-align:center}
+.btn:disabled{opacity:.5}
+.row{display:flex;gap:10px}.row>*{flex:1}
+.compliment{background:linear-gradient(135deg,#fff,#fff0f4);border:1.5px dashed var(--coral);
+  border-radius:16px;padding:14px 16px;font-style:italic;color:var(--plum);font-weight:600;margin-bottom:14px}
+.lvlbar{height:6px;background:rgba(255,255,255,.2);border-radius:999px;margin-top:4px;overflow:hidden}
+.lvlbar>i{display:block;height:100%;background:#9be7c4;border-radius:999px;transition:width .5s}
+.chk{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid var(--line)}
+.chk:last-child{border-bottom:none}
+.chk .box{width:26px;height:26px;border-radius:8px;border:2px solid var(--line);flex:none;display:grid;place-items:center;font-size:15px;color:#fff}
+.chk.done .box{background:var(--good);border-color:var(--good)}
+.chk.done .lbl{text-decoration:line-through;color:var(--muted)}
+.chk .lbl{flex:1;font-weight:600;font-size:15px}.chk .xp{font-size:12px;color:var(--gold);font-weight:800}
+.sprog{height:8px;background:var(--line);border-radius:999px;overflow:hidden;margin-bottom:16px}
+.sprog>i{display:block;height:100%;background:var(--coral);transition:width .4s}
+.flash{font-size:13px;font-weight:700;padding:10px 12px;border-radius:10px;margin-top:12px}
+.flash.ok{background:#e7f7ef;color:var(--good)}.flash.no{background:#fdeaee;color:var(--bad)}
+.qtext{font-size:20px;font-weight:700;margin:6px 0 16px}
+.opt{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--line);
+  border-radius:12px;padding:14px;margin-bottom:10px;font-size:16px;font-weight:600}
+.opt.right{border-color:var(--good);background:#e7f7ef}
+.opt.wrong{border-color:var(--bad);background:#fdeaee}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;min-height:50px}
+.chip{background:var(--plum);color:#fff;padding:10px 13px;border-radius:10px;font-weight:700;font-size:15px}
+.chip.pool{background:#fff;color:var(--plum);border:1.5px solid var(--line)}
+.flip{perspective:1000px;height:190px;margin-bottom:14px}
+.flip-in{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;display:grid;place-items:center;
+  text-align:center;padding:18px;border:1.5px solid var(--line);background:#fff}
+.face.back{transform:rotateY(180deg);background:linear-gradient(135deg,#fff,#fff3f6)}
+.face .big{font-size:26px;font-weight:800;color:var(--plum)}
+.spk{background:var(--gold);color:#5a3a00;border-radius:999px;padding:10px 16px;font-weight:700;font-size:15px;display:inline-flex;gap:6px;align-items:center}
+.bigspk{background:var(--gold);color:#5a3a00;border-radius:16px;padding:22px;font-weight:800;font-size:18px;width:100%;display:flex;gap:10px;align-items:center;justify-content:center}
+.lg{display:flex;align-items:center;gap:12px;padding:11px 6px;border-radius:12px}
+.lg.me{background:#fff3f6;border:1.5px solid var(--coral)}
+.lg .rk{width:26px;font-weight:800;color:var(--muted);text-align:center}
+.lg .av{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:20px;background:#f3e6ec}
+.lg .nm{flex:1;font-weight:700}.lg .pts{font-weight:800;color:var(--plum)}
+.svgwrap{width:100%;overflow:hidden}
+.heat{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.heat span{aspect-ratio:1;border-radius:5px;background:#f0dfe4}
+.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:#fff3f6;border-radius:14px;padding:12px;text-align:center}
+.stat b{font-size:24px;color:var(--plum);display:block}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.badge{background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:10px 6px;text-align:center;font-size:12px}
+.badge .ic{font-size:26px;filter:grayscale(1);opacity:.35}
+.badge.on .ic{filter:none;opacity:1}.badge.on{border-color:var(--gold);background:#fffaf0}
+.coupon{display:flex;gap:12px;align-items:center;border:1.5px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px}
+.coupon.on{border-color:var(--gold);background:linear-gradient(135deg,#fffaf0,#fff)}
+.coupon.locked{opacity:.55}
+.coupon .d{font-size:24px;font-weight:800;color:var(--coral);width:54px;text-align:center;flex:none}
+.coupon .t{flex:1}.coupon .t b{display:block}
+.coupon .st{font-size:11px;font-weight:800;text-transform:uppercase;color:var(--gold)}
+nav{position:fixed;bottom:0;left:0;right:0;max-width:520px;margin:0 auto;background:#fff;
+  border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:40}
+nav button{flex:1;background:none;padding:9px 0 8px;font-size:11px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px}
+nav button .ni{font-size:21px}
+nav button.on{color:var(--plum);font-weight:700}
+.overlay{position:fixed;inset:0;background:rgba(44,26,36,.55);z-index:60;display:grid;place-items:center;padding:22px;animation:fade .2s}
+.sheet{background:#fff;border-radius:22px;padding:24px;max-width:460px;width:100%;text-align:center;box-shadow:var(--shadow)}
+.sheet .emo{font-size:60px;animation:pop .5s}
+@keyframes pop{0%{transform:scale(0)}70%{transform:scale(1.25)}100%{transform:scale(1)}}
+input,select{width:100%;padding:13px;border:1.5px solid var(--line);border-radius:12px;font-size:16px;font-family:inherit;margin-bottom:12px;background:#fff}
+label{font-weight:700;font-size:14px;display:block;margin-bottom:5px}
+canvas#confetti{position:fixed;inset:0;pointer-events:none;z-index:55}
+.tag{display:inline-block;background:#f3e6ec;color:var(--plum);border-radius:999px;padding:3px 10px;font-size:12px;font-weight:700;margin:2px 2px 8px 0}
+.step{display:flex;gap:11px;margin-bottom:13px}.step .n{width:26px;height:26px;border-radius:50%;background:var(--plum);color:#fff;font-weight:800;display:grid;place-items:center;flex:none;font-size:14px}
+code{background:#f3e6ec;padding:2px 6px;border-radius:6px;font-size:13px;color:var(--plum-d);word-break:break-all}
+/* matching */
+.match{display:flex;gap:10px}.match .col{flex:1;display:flex;flex-direction:column;gap:8px}
+.pairbtn{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:13px 10px;font-weight:600;font-size:14px;text-align:center}
+.pairbtn.sel{border-color:var(--plum);background:#fff3f6}
+.pairbtn.ok{border-color:var(--good);background:#e7f7ef;opacity:.6}
+.pairbtn.err{border-color:var(--bad);background:#fdeaee}
+.lvltag{font-size:11px;font-weight:800;color:#9be7c4;background:rgba(0,0,0,.04);border-radius:6px;padding:1px 6px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hrow">
+    <div class="brand">💞 Cœur·Lingo</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <div class="streakpill">🔥 <span id="hStreak">0</span></div>
+      <button class="iconbtn" onclick="show('settings')">⚙️</button>
+    </div>
+  </div>
+  <div class="xpbar"><i id="hXp" style="width:0"></i></div>
+  <div class="xpmeta"><span id="hXpToday">0 / 50 XP</span><span id="hLevel">A2</span></div>
+  <div class="lvlbar"><i id="hLvlProg" style="width:0"></i></div>
+</header>
+
+<main>
+  <section id="view-home" class="view"></section>
+  <section id="view-session" class="view hidden"></section>
+  <section id="view-liga" class="view hidden"></section>
+  <section id="view-stats" class="view hidden"></section>
+  <section id="view-reward" class="view hidden"></section>
+  <section id="view-settings" class="view hidden"></section>
+  <section id="view-blocker" class="view hidden"></section>
+</main>
+
+<nav>
+  <button data-nav="home" class="on" onclick="show('home')"><span class="ni">🏠</span>Accueil</button>
+  <button data-nav="liga" onclick="show('liga')"><span class="ni">🏆</span>Ligue</button>
+  <button data-nav="reward" onclick="show('reward')"><span class="ni">🎁</span>Récompenses</button>
+  <button data-nav="stats" onclick="show('stats')"><span class="ni">📈</span>Progrès</button>
+</nav>
+
+<canvas id="confetti" class="hidden"></canvas>
+<div id="modal-root"></div>
+
+<script src="data/inhalte.js"></script>
+<script src="data/inhalte-b2c1.js"></script>
+<script>
+/* =====================================================================
+   Cœur·Lingo — Engine v2 (niveaux A2→C1, SRS, adaptatif, 9 types)
+   ===================================================================== */
+const KEY="dl_state_v1";
+const DAILY_XP_GOAL=50;
+const LEVELS=["A2","B1","B2","C1"];
+const LEVELUP_TH={A2:40,B1:60,B2:80,C1:9999};   // points de maîtrise pour monter
+const MILESTONES=[10,25,60,100,150,205,300];
+const COUPONS={
+  10:{t:"Massage de 20 min",d:"offert par ton chéri (nuque/dos)"},
+  25:{t:"Petit-déj au lit + soirée ciné",d:"tu choisis le film et les snacks"},
+  60:{t:"Soirée resto",d:"dans le restaurant de ton choix"},
+  100:{t:"Excursion à deux",d:"la destination que tu veux"},
+  150:{t:"Journée spa / thermes",d:"détente à deux"},
+  205:{t:"Journée expérience",d:"concert, cours de cuisine ou montgolfière"},
+  300:{t:"Week-end bien-être",d:"1–2 nuits en resort 🏝️"}
+};
+const NPC_SEED=[
+  {name:"Camille",av:"🥖",rate:42},{name:"Tomas",av:"🦊",rate:55},
+  {name:"Sophie",av:"🌸",rate:34},{name:"Lukas",av:"🐻",rate:48},{name:"Inès",av:"🦉",rate:60}
+];
+const BADGES=[
+  {id:"first",ic:"🌟",t:"Premier pas"},{id:"s3",ic:"🔥",t:"3 jours"},
+  {id:"s7",ic:"⚡",t:"7 jours"},{id:"s30",ic:"💎",t:"30 jours"},
+  {id:"w50",ic:"📚",t:"50 mots"},{id:"w100",ic:"🧠",t:"100 mots"},
+  {id:"perfect",ic:"🎯",t:"Sans faute"},{id:"beatall",ic:"👑",t:"1ʳᵉ de la ligue"},
+  {id:"b1",ic:"🚀",t:"Niveau B1"},{id:"b2",ic:"🏔️",t:"Niveau B2"},{id:"c1",ic:"🦅",t:"Niveau C1"}
+];
+const TYPES={
+  vocab:{icon:"🗂️",lbl:"Vocabulaire"}, uebersetzen:{icon:"⌨️",lbl:"Traduire (écrire)"},
+  luecke:{icon:"✏️",lbl:"Compléter"}, satzbau:{icon:"🧩",lbl:"Construire des phrases"},
+  dialog:{icon:"🗣️",lbl:"Dialogue (prononciation)"}, grammatik:{icon:"📐",lbl:"Grammaire"},
+  hoeren:{icon:"🎧",lbl:"Compréhension orale"}, konjugation:{icon:"🔧",lbl:"Conjugaison"},
+  paare:{icon:"🔗",lbl:"Associer les paires"}
+};
+
+/* ---------- dates ---------- */
+const pad=n=>String(n).padStart(2,"0");
+function todayStr(d=new Date()){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());}
+function daysBetween(a,b){return Math.round((new Date(b)-new Date(a))/864e5);}
+function addDays(s,n){const d=new Date(s);d.setDate(d.getDate()+n);return todayStr(d);}
+function dayIndex(){return daysBetween("2026-01-01",todayStr());}
+function weekKey(s){const d=new Date(s);const day=(d.getDay()+6)%7;d.setDate(d.getDate()-day);return todayStr(d);}
+function rnd(a,b){return a+Math.random()*(b-a);}
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function levelIdx(l){return LEVELS.indexOf(l);}
+
+/* ---------- state ---------- */
+let S=load();
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||null}catch(e){return null}}
+function save(){localStorage.setItem(KEY,JSON.stringify(S));}
+function freshState(name,email){
+  return{
+    user:{name:name||"",niveau:"A2",freundEmail:email||"",w3key:""},
+    streak:{aktuell:0,längste:0,letzterTag:"",freezes:2},
+    xp:{gesamt:0,heute:0,heuteDatum:todayStr()},
+    mastery:{A2:0,B1:0,B2:0,C1:0},
+    recent:[],            // fenêtre glissante de justesse (1/0)
+    srs:{},               // id -> {ease,intv,due,reps}
+    wordsSeen:0, seenIds:[],
+    sessions:[], badges:[], coupons:[],
+    liga:{week:weekKey(todayStr()),meineXpWoche:0,lastTag:todayStr(),
+      npcs:NPC_SEED.map(n=>({...n,xpWoche:Math.round(rnd(0,n.rate))}))},
+    checkliste:null, mailSent:{}
+  };
+}
+function curIdx(){return levelIdx(S.user.niveau);}
+function recentAcc(){const r=S.recent.slice(-16);return r.length?r.reduce((a,b)=>a+b,0)/r.length:0.7;}
+
+/* ---------- daily plan / checklist ---------- */
+function planForDay(){
+  const seed=dayIndex();
+  const rotA=["uebersetzen","satzbau"][seed%2];
+  const rotB=["luecke","hoeren","konjugation"][seed%3];
+  // 6 blocs variés : vocab, production écrite, grammaire en contexte, écoute/prononciation, grammaire, révision
+  return ["vocab",rotA,rotB,"dialog","grammatik","paare"];
+}
+function ensureChecklist(){
+  const t=todayStr();
+  if(!S.checkliste||S.checkliste.datum!==t){
+    S.checkliste={datum:t,plan:planForDay()};
+    S.checkliste.items=S.checkliste.plan.map(ty=>({ty,erledigt:false}));
+    save();
+  }
+}
+function checklistDone(){return S.checkliste.items.every(i=>i.erledigt);}
+
+/* ---------- XP / day rollover ---------- */
+function rolloverXp(){const t=todayStr();if(S.xp.heuteDatum!==t){S.xp.heute=0;S.xp.heuteDatum=t;}}
+function addXp(n){rolloverXp();S.xp.heute+=n;S.xp.gesamt+=n;S.liga.meineXpWoche+=n;save();renderHeader();}
+
+/* ---------- SRS (SM-2 light) ---------- */
+function srsUpdate(id,correct){
+  let c=S.srs[id]||{ease:2.3,intv:0,reps:0,due:dayIndex()};
+  if(correct){c.reps++;c.ease=Math.min(2.8,c.ease+0.1);
+    c.intv=c.reps<=1?1:c.reps===2?3:Math.round(c.intv*c.ease);}
+  else{c.reps=0;c.ease=Math.max(1.3,c.ease-0.2);c.intv=1;}
+  c.due=dayIndex()+c.intv;S.srs[id]=c;save();
+}
+function isDue(id){const c=S.srs[id];return c&&c.due<=dayIndex();}
+
+/* ---------- record an answer ---------- */
+function record(correct,lvl){
+  SES.total++; if(correct)SES.correct++;
+  S.recent.push(correct?1:0); if(S.recent.length>40)S.recent.shift();
+  if(correct){const L=lvl||S.user.niveau; if(S.mastery[L]!=null)S.mastery[L]++;}
+  save(); maybeLevelUp();
+}
+function markSeen(id){if(!S.seenIds.includes(id)){S.seenIds.push(id);S.wordsSeen++;}}
+
+/* ---------- level up ---------- */
+function maybeLevelUp(){
+  const i=curIdx();
+  if(i>=LEVELS.length-1)return;
+  const lvl=S.user.niveau;
+  if(S.mastery[lvl]>=LEVELUP_TH[lvl]){
+    const nx=LEVELS[i+1];S.user.niveau=nx;save();
+    grantBadge(nx.toLowerCase());
+    SES&&(SES.leveledTo=nx);
+  }
+}
+
+/* ---------- item selection (adaptive + SRS) ---------- */
+function poolFor(arr){ // items des niveaux débloqués
+  const ci=curIdx();
+  return arr.filter(it=>levelIdx(it.lvl)<=ci);
+}
+function pickSRS(arr,n){ // types à révision espacée (vocab/uebersetzen/konjugation)
+  const pool=poolFor(arr);
+  const due=shuffle(pool.filter(it=>isDue(it.id)));
+  const fresh=shuffle(pool.filter(it=>!S.srs[it.id]));
+  const seen=shuffle(pool.filter(it=>S.srs[it.id]&&!isDue(it.id)));
+  // plus de révision si justesse faible, plus de neuf si élevée
+  const acc=recentAcc();
+  const wantNew=acc>0.8?Math.ceil(n*0.6):acc<0.55?Math.floor(n*0.25):Math.ceil(n*0.45);
+  const out=[];
+  for(const it of due){if(out.length>=n-Math.min(wantNew,fresh.length))break;out.push(it);}
+  for(const it of fresh){if(out.length>=n)break;out.push(it);}
+  for(const it of due){if(out.length>=n)break;if(!out.includes(it))out.push(it);}
+  for(const it of seen){if(out.length>=n)break;out.push(it);}
+  return shuffle(out).slice(0,n);
+}
+function pickLevel(arr,n){ // types sans SRS : biais niveau courant, plus facile si en difficulté
+  const ci=curIdx();const acc=recentAcc();
+  let pool=poolFor(arr);
+  const cur=pool.filter(it=>levelIdx(it.lvl)===ci);
+  const lower=pool.filter(it=>levelIdx(it.lvl)<ci);
+  let ranked = acc<0.55 ? [...shuffle(lower),...shuffle(cur)] : [...shuffle(cur),...shuffle(lower)];
+  if(ranked.length<n) ranked=shuffle(pool);
+  return ranked.slice(0,n);
+}
+
+/* ---------- complete session ---------- */
+function completeSession(durSec){
+  const t=todayStr();
+  if(S.streak.letzterTag!==t){
+    if(S.streak.letzterTag===addDays(t,-1)||S.streak.letzterTag==="") S.streak.aktuell+=1;
+    else if(daysBetween(S.streak.letzterTag,t)>1 && S.streak.freezes>0){S.streak.freezes-=1;S.streak.aktuell+=1;}
+    else S.streak.aktuell=1;
+    S.streak.letzterTag=t;
+    S.streak.längste=Math.max(S.streak.längste,S.streak.aktuell);
+  }
+  S.sessions.push({datum:t,dauerSek:durSec,xp:SES.correct*5,aufgaben:SES.total,
+    genauigkeit:SES.total?Math.round(SES.correct/SES.total*100):0});
+  addXp(20);
+  if(SES.total>0&&SES.correct===SES.total)grantBadge("perfect");
+  const nb=checkBadges(),nc=checkCoupons(),lvl=SES.leveledTo;
+  advanceLiga();save();
+  celebrate(nb,nc,lvl);
+}
+function hasBadge(id){return S.badges.some(b=>b.id===id);}
+function grantBadge(id){if(BADGES.find(b=>b.id===id)&&!hasBadge(id)){S.badges.push({id,datum:todayStr()});save();return true;}return false;}
+function checkBadges(){
+  const got=[];const m={first:S.sessions.length>=1,s3:S.streak.aktuell>=3,s7:S.streak.aktuell>=7,
+    s30:S.streak.aktuell>=30,w50:S.wordsSeen>=50,w100:S.wordsSeen>=100};
+  for(const k in m)if(m[k]&&grantBadge(k))got.push(BADGES.find(b=>b.id===k));
+  return got;
+}
+function checkCoupons(){
+  let g=null;
+  MILESTONES.forEach(m=>{if(S.streak.aktuell>=m&&!S.coupons.some(c=>c.meilenstein===m)){
+    S.coupons.push({meilenstein:m,titel:COUPONS[m].t,status:"verdient",datum:todayStr()});g={m,...COUPONS[m]};}});
+  save();return g;
+}
+
+/* ---------- NPC ---------- */
+function advanceLiga(){
+  const t=todayStr(),wk=weekKey(t);
+  if(S.liga.week!==wk){S.liga.week=wk;S.liga.meineXpWoche=0;S.liga.npcs.forEach(n=>n.xpWoche=Math.round(rnd(0,n.rate)));}
+  const gap=Math.max(0,daysBetween(S.liga.lastTag,t));
+  for(let d=0;d<gap;d++)S.liga.npcs.forEach(n=>{let g=rnd(n.rate*0.5,n.rate*1.4);
+    if(n.xpWoche>S.liga.meineXpWoche+40)g*=0.55;if(n.xpWoche<S.liga.meineXpWoche-40)g*=1.4;n.xpWoche+=Math.round(g);});
+  S.liga.lastTag=t;if(ligaSorted()[0].me)grantBadge("beatall");save();
+}
+function ligaSorted(){
+  const a=[...S.liga.npcs.map(n=>({name:n.name,av:n.av,pts:n.xpWoche,me:false})),
+    {name:S.user.name||"Toi",av:"💖",pts:S.liga.meineXpWoche,me:true}];
+  return a.sort((x,y)=>y.pts-x.pts);
+}
+
+/* ---------- mail ---------- */
+async function sendMail(subject,body,once){
+  if(once&&S.mailSent[once])return;
+  if(!S.user.freundEmail||!S.user.w3key)return;
+  try{await fetch("https://api.web3forms.com/submit",{method:"POST",
+    headers:{"Content-Type":"application/json",Accept:"application/json"},
+    body:JSON.stringify({access_key:S.user.w3key,subject,from_name:"Cœur·Lingo",message:body,email:S.user.freundEmail})});
+    if(once){S.mailSent[once]=todayStr();save();}
+  }catch(e){console.warn("mail",e);}
+}
+function weeklyReportIfDue(){
+  const wk=weekKey(todayStr()),tag="week_"+wk;
+  if(S.mailSent[tag]||S.sessions.length<1)return;
+  const lw=addDays(todayStr(),-7),ses=S.sessions.filter(s=>s.datum>=lw);
+  if(!ses.length)return;
+  const min=Math.round(ses.reduce((a,s)=>a+s.dauerSek,0)/60);
+  sendMail(`💞 ${S.user.name||"Elle"} a appris ${min} min cette semaine`,
+    `Rapport hebdo de ${S.user.name||"ta chérie"} 💞\n\n• Sessions : ${ses.length}\n• Minutes : ${min}\n• Série : ${S.streak.aktuell} jours 🔥\n• Niveau : ${S.user.niveau}\n• Mots vus : ${S.wordsSeen}\n• Ligue : ${ligaSorted().findIndex(x=>x.me)+1}/6\n\nElle s'accroche — un petit mot l'encouragerait ❤️`,tag);
+}
+
+/* ===================================================================
+   NAVIGATION / HEADER
+   =================================================================== */
+function show(v){
+  ["home","session","liga","stats","reward","settings","blocker"].forEach(x=>document.getElementById("view-"+x).classList.toggle("hidden",x!==v));
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.nav===v));
+  window.scrollTo(0,0);
+  ({home:renderHome,liga:renderLiga,stats:renderStats,reward:renderReward,settings:renderSettings,blocker:renderBlocker}[v]||(()=>{}))();
+}
+function renderHeader(){
+  rolloverXp();
+  document.getElementById("hStreak").textContent=S.streak.aktuell;
+  document.getElementById("hXp").style.width=Math.min(100,S.xp.heute/DAILY_XP_GOAL*100)+"%";
+  document.getElementById("hXpToday").textContent=`${S.xp.heute} / ${DAILY_XP_GOAL} XP`;
+  const lvl=S.user.niveau,th=LEVELUP_TH[lvl];
+  document.getElementById("hLevel").textContent="Niveau "+lvl+(curIdx()<3?` → ${LEVELS[curIdx()+1]}`:" 🦅");
+  document.getElementById("hLvlProg").style.width=(curIdx()<3?Math.min(100,S.mastery[lvl]/th*100):100)+"%";
+}
+function todaysCompliment(){const L=INHALTE.komplimente;return L[Math.abs(dayIndex())%L.length];}
+
+/* ---------- ACCUEIL ---------- */
+function renderHome(){
+  ensureChecklist();
+  const done=checklistDone();
+  document.getElementById("view-home").innerHTML=`
+   <div class="compliment">“${todaysCompliment()}”</div>
+   <div class="card">
+     <h2>Bonjour ${esc(S.user.name)||"ma belle"} 👋 <span class="lvltag">${S.user.niveau}</span></h2>
+     <p class="muted sm" style="margin:0 0 14px">${done?"Défi du jour terminé — bravo ! Tu peux débloquer tes apps. 🎉":"Ton défi du jour (~5 min). 6 blocs variés. Termine-le pour ta série + débloquer tes apps."}</p>
+     ${S.checkliste.items.map(it=>{const m=TYPES[it.ty];return `<div class="chk ${it.erledigt?'done':''}"><div class="box">${it.erledigt?'✓':''}</div><div class="lbl">${m.icon} ${m.lbl}</div><div class="xp">★</div></div>`;}).join("")}
+   </div>
+   ${done?`<button class="big-cta" onclick="unlockApps()">🔓 Débloquer mes apps</button>
+     <button class="btn ghost block" style="margin-top:10px" onclick="shareWithPartner()">💌 Montrer mes progrès à mon chéri</button>
+     <button class="btn ghost block" style="margin-top:10px" onclick="startSession()">↺ Refaire une session bonus</button>`
+   :`<button class="big-cta" onclick="startSession()">▶︎ Commencer le défi du jour</button>`}
+   <div class="card" style="margin-top:14px"><div class="row">
+     <div class="stat"><b>${S.streak.aktuell}</b><span class="sm muted">série 🔥</span></div>
+     <div class="stat"><b>${weekMinutes()}</b><span class="sm muted">min / sem.</span></div>
+     <div class="stat"><b>${ligaSorted().findIndex(x=>x.me)+1}<span class="sm">/6</span></b><span class="sm muted">ligue 🏆</span></div>
+   </div></div>
+   <button class="btn ghost block" onclick="show('blocker')">🛡️ Configurer le blocage des apps (iPhone)</button>`;
+}
+function weekMinutes(){const lw=addDays(todayStr(),-6);return Math.round(S.sessions.filter(s=>s.datum>=lw).reduce((a,s)=>a+s.dauerSek,0)/60);}
+
+/* ===================================================================
+   SESSION ENGINE
+   =================================================================== */
+let SES=null;
+function startSession(){
+  ensureChecklist();
+  SES={plan:S.checkliste.plan,bi:0,start:Date.now(),correct:0,total:0,items:[],si:0,locked:false,leveledTo:null};
+  show("session");runBlock();
+}
+function vw(){return document.getElementById("view-session");}
+function sesProgress(){return `<div class="sprog"><i style="width:${SES.bi/SES.plan.length*100}%"></i></div><div class="sm muted center" style="margin-bottom:8px">Bloc ${SES.bi+1} / ${SES.plan.length}</div>`;}
+function runBlock(){
+  if(SES.bi>=SES.plan.length){finishSession();return;}
+  SES.si=0;SES.locked=false;SES.sub=null;
+  const ty=SES.plan[SES.bi];
+  ({vocab:bVocab,uebersetzen:bUeber,luecke:bLuecke,satzbau:bSatz,dialog:bDialog,grammatik:bGram,hoeren:bHoeren,konjugation:bKonj,paare:bPaare}[ty])();
+}
+function blockDone(){const it=S.checkliste.items[SES.bi];if(it)it.erledigt=true;save();SES.bi++;renderHeader();runBlock();}
+function finishSession(){const dur=Math.round((Date.now()-SES.start)/1000);completeSession(dur);}
+function head(tag){return sesProgress()+`<div class="card"><span class="tag">${tag}</span>`;}
+
+/* --- Vocabulaire (flashcards + auto-éval SRS) --- */
+function bVocab(){SES.items=pickSRS(INHALTE.vokabeln,5);if(!SES.items.length){blockDone();return;}renderVocab();}
+function renderVocab(){
+  const it=SES.items[SES.si];markSeen(it.id);
+  vw().innerHTML=head(`🗂️ Nouveau mot ${SES.si+1}/${SES.items.length}`)+`
+     <div class="flip" id="flip" onclick="this.classList.toggle('on')" style="margin-top:6px"><div class="flip-in">
+       <div class="face"><div><div class="muted sm">Français</div><div class="big">${esc(it.fr)}</div><div class="sm muted" style="margin-top:8px">Touche pour révéler 👆</div></div></div>
+       <div class="face back"><div><div class="muted sm">Deutsch <span class="lvltag">${it.lvl}</span></div><div class="big">${esc(it.de)}</div><div class="sm" style="margin-top:8px">${esc(it.ex)}</div></div></div>
+     </div></div>
+     <div class="center"><button class="spk" onclick="event.stopPropagation();speak(${q(it.de)})">🔊 Écouter</button></div>
+   </div>
+   <p class="sm muted center">Tu connaissais ce mot ?</p>
+   <div class="row"><button class="btn ghost" onclick="vocabRate(false)">❌ Pas encore</button><button class="btn" onclick="vocabRate(true)">✅ Je savais</button></div>`;
+}
+function vocabRate(known){const it=SES.items[SES.si];srsUpdate(it.id,known);if(known&&S.mastery[it.lvl]!=null){S.mastery[it.lvl]+=0.5;save();}
+  if(SES.si<SES.items.length-1){SES.si++;renderVocab();}else{addXp(15);blockDone();}}
+
+/* --- Traduire (FR→DE, saisie) --- */
+function bUeber(){SES.items=pickSRS(INHALTE.uebersetzen,3);if(!SES.items.length){blockDone();return;}renderUeber();}
+function renderUeber(){
+  const it=SES.items[SES.si];
+  vw().innerHTML=head(`⌨️ Traduire ${SES.si+1}/${SES.items.length} <span class="lvltag">${it.lvl}</span>`)+`
+     <p class="muted">Écris en allemand :</p><div class="qtext">${esc(it.fr)}</div>
+     <input id="uin" autocapitalize="sentences" autocomplete="off" placeholder="ta réponse en allemand…" onkeydown="if(event.key==='Enter')checkUeber()"/>
+     <div id="fb"></div><button class="btn block" id="cb" onclick="checkUeber()">Vérifier</button></div>`;
+  setTimeout(()=>{const e=document.getElementById("uin");e&&e.focus();},100);
+}
+function norm(s){return String(s).toLowerCase().replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss").replace(/[.,!?;:'"«»’]/g," ").replace(/\s+/g," ").trim();}
+function checkUeber(){
+  if(SES.locked)return;const it=SES.items[SES.si];const inp=document.getElementById("uin").value;
+  const ok=[it.de,...(it.alt||[])].some(a=>norm(a)===norm(inp));
+  SES.locked=true;record(ok,it.lvl);srsUpdate(it.id,ok);markSeen(it.id);
+  document.getElementById("cb").classList.add("hidden");document.getElementById("uin").disabled=true;
+  document.getElementById("fb").innerHTML=(ok?`<div class="flash ok">✅ Parfait : « ${esc(it.de)} »</div>`:`<div class="flash no">❌ Réponse : « ${esc(it.de)} »</div>`)
+    +`<button class="btn block" style="margin-top:12px" onclick="ueberNext()">${SES.si<SES.items.length-1?'Suivant →':'Continuer →'}</button>`;
+  if(ok)addXp(8);
+}
+function ueberNext(){SES.locked=false;if(SES.si<SES.items.length-1){SES.si++;renderUeber();}else blockDone();}
+
+/* --- Compléter (MC) & Grammaire partagent le moteur QCM --- */
+function bLuecke(){SES.items=pickLevel(INHALTE.luecken,3);if(!SES.items.length){blockDone();return;}renderMC("luecke");}
+function bGram(){const set=pickLevel(INHALTE.grammatik,1)[0];if(!set){blockDone();return;}SES.gset=set;SES.items=set.items;renderMC("grammatik");}
+function renderMC(kind){
+  const it=SES.items[SES.si];
+  const tag=kind==="grammatik"?`📐 ${esc(SES.gset.titel)} <span class="lvltag">${SES.gset.lvl}</span>`:`✏️ Compléter ${SES.si+1}/${SES.items.length} <span class="lvltag">${it.lvl}</span>`;
+  const intro=kind==="grammatik"?`<p class="sm muted">${esc(SES.gset.erkl)}</p>`:"";
+  const qhtml=kind==="grammatik"?esc(it.q):esc(it.satz).replace("___","<span style='color:var(--coral)'>____</span>");
+  vw().innerHTML=head(tag)+intro+`<div class="qtext">${qhtml}</div>
+     ${it.options.map((o,i)=>`<button class="opt" onclick="answerMC(${i})">${esc(o)}</button>`).join("")}
+     <div id="fb"></div></div>`;
+  SES.kind=kind;
+}
+function answerMC(i){
+  if(SES.locked)return;SES.locked=true;
+  const it=SES.items[SES.si];const lvl=SES.kind==="grammatik"?SES.gset.lvl:it.lvl;
+  const ok=i===it.answer;record(ok,lvl);
+  const opts=vw().querySelectorAll(".opt");opts.forEach((o,k)=>{o.disabled=true;if(k===it.answer)o.classList.add("right");});
+  if(!ok)opts[i].classList.add("wrong");
+  const ex=SES.kind==="grammatik"?it.explainFr:it.fr;
+  document.getElementById("fb").innerHTML=(ok?`<div class="flash ok">✅ ${esc(ex)}</div>`:`<div class="flash no">❌ ${esc(ex)}</div>`)
+    +`<button class="btn block" style="margin-top:12px" onclick="mcNext()">${SES.si<SES.items.length-1?'Suivant →':'Continuer →'}</button>`;
+  if(ok)addXp(6);
+}
+function mcNext(){SES.locked=false;if(SES.si<SES.items.length-1){SES.si++;renderMC(SES.kind);}else{addXp(6);blockDone();}}
+
+/* --- Construire des phrases --- */
+function bSatz(){SES.items=pickLevel(INHALTE.satzbau,3);if(!SES.items.length){blockDone();return;}renderSatz();}
+function renderSatz(){
+  const it=SES.items[SES.si];const pool=shuffle(it.woerter);
+  vw().innerHTML=head(`🧩 Construire ${SES.si+1}/${SES.items.length} <span class="lvltag">${it.lvl}</span>`)+`
+     <p class="sm muted">${esc(it.fr)}</p>
+     <div class="chips" id="answer" style="border-bottom:1.5px dashed var(--line);padding-bottom:10px"></div>
+     <div class="chips" id="pool">${pool.map(w=>`<button class="chip pool" data-w="${esc(w)}" onclick="pick(this)">${esc(w)}</button>`).join("")}</div>
+     <div id="fb"></div><button class="btn block" id="cb" onclick="checkSatz()">Vérifier</button></div>`;
+}
+function pick(b){const a=document.getElementById("answer");if(b.parentElement.id==="pool")a.appendChild(b);else document.getElementById("pool").appendChild(b);}
+function checkSatz(){
+  if(SES.locked)return;const it=SES.items[SES.si];
+  const got=[...document.getElementById("answer").children].map(c=>c.dataset.w).join(" ");
+  SES.locked=true;const ok=got===it.loesung;record(ok,it.lvl);
+  document.getElementById("cb").classList.add("hidden");
+  document.getElementById("fb").innerHTML=(ok?`<div class="flash ok">✅ Parfait : « ${esc(it.loesung)} »</div>`:`<div class="flash no">❌ Réponse : « ${esc(it.loesung)} »</div>`)
+    +`<div class="center" style="margin:10px 0"><button class="spk" onclick="speak(${q(it.loesung)})">🔊 Écouter</button></div>`
+    +`<button class="btn block" onclick="satzNext()">${SES.si<SES.items.length-1?'Suivant →':'Continuer →'}</button>`;
+  if(ok)addXp(7);
+}
+function satzNext(){SES.locked=false;if(SES.si<SES.items.length-1){SES.si++;renderSatz();}else blockDone();}
+
+/* --- Dialogue (écouter → répéter) --- */
+function bDialog(){const d=pickLevel(INHALTE.dialoge,1)[0];if(!d){blockDone();return;}SES.dlg=d;SES.items=d.zeilen;renderDialog();}
+function renderDialog(){
+  const z=SES.items[SES.si];
+  vw().innerHTML=head(`🗣️ ${esc(SES.dlg.titel)} — ${esc(SES.dlg.szene)} <span class="lvltag">${SES.dlg.lvl}</span>`)+`
+     <div class="qtext">${esc(z.de)}</div><p class="muted">${esc(z.fr)}</p>
+     <button class="bigspk" onclick="speak(${q(z.de)})">🔊 Écouter</button>
+     <p class="sm muted center" style="margin:14px 0 0">À voix haute, répète la phrase 🎙️</p></div>
+   <button class="btn block" onclick="dlgNext()">${SES.si<SES.items.length-1?'Phrase suivante →':"J'ai répété — terminer →"}</button>`;
+  setTimeout(()=>speak(z.de),350);
+}
+function dlgNext(){if(SES.si<SES.items.length-1){SES.si++;renderDialog();}else{addXp(10);blockDone();}}
+
+/* --- Compréhension orale (audio → MC) --- */
+function bHoeren(){SES.items=pickLevel(INHALTE.hoerverstehen,3);if(!SES.items.length){blockDone();return;}renderHoeren();}
+function renderHoeren(){
+  const it=SES.items[SES.si];
+  vw().innerHTML=head(`🎧 Écoute ${SES.si+1}/${SES.items.length} <span class="lvltag">${it.lvl}</span>`)+`
+     <button class="bigspk" onclick="speak(${q(it.audio)})">🔊 Écouter (rejouer)</button>
+     <p class="qtext" style="margin-top:16px">${esc(it.q)}</p>
+     ${it.options.map((o,i)=>`<button class="opt" onclick="answerHoeren(${i})">${esc(o)}</button>`).join("")}
+     <div id="fb"></div></div>`;
+  setTimeout(()=>speak(it.audio),400);
+}
+function answerHoeren(i){
+  if(SES.locked)return;SES.locked=true;const it=SES.items[SES.si];const ok=i===it.answer;record(ok,it.lvl);
+  const opts=vw().querySelectorAll(".opt");opts.forEach((o,k)=>{o.disabled=true;if(k===it.answer)o.classList.add("right");});
+  if(!ok)opts[i].classList.add("wrong");
+  document.getElementById("fb").innerHTML=(ok?`<div class="flash ok">✅ Bien entendu !</div>`:`<div class="flash no">❌ Réécoute : « ${esc(it.audio)} »</div>`)
+    +`<button class="btn block" style="margin-top:12px" onclick="hoerenNext()">${SES.si<SES.items.length-1?'Suivant →':'Continuer →'}</button>`;
+  if(ok)addXp(8);
+}
+function hoerenNext(){SES.locked=false;if(SES.si<SES.items.length-1){SES.si++;renderHoeren();}else blockDone();}
+
+/* --- Conjugaison (saisie) --- */
+function bKonj(){SES.items=pickSRS(INHALTE.konjugation,4);if(!SES.items.length){blockDone();return;}renderKonj();}
+function renderKonj(){
+  const it=SES.items[SES.si];
+  vw().innerHTML=head(`🔧 Conjugaison ${SES.si+1}/${SES.items.length} <span class="lvltag">${it.lvl}</span>`)+`
+     <div class="qtext">${esc(it.prompt)}</div>
+     <input id="kin" autocapitalize="off" autocomplete="off" placeholder="forme correcte…" onkeydown="if(event.key==='Enter')checkKonj()"/>
+     <div id="fb"></div><button class="btn block" id="cb" onclick="checkKonj()">Vérifier</button></div>`;
+  setTimeout(()=>{const e=document.getElementById("kin");e&&e.focus();},100);
+}
+function checkKonj(){
+  if(SES.locked)return;const it=SES.items[SES.si];const inp=document.getElementById("kin").value;
+  const ok=[it.answer,...(it.alt||[])].some(a=>norm(a)===norm(inp));
+  SES.locked=true;record(ok,it.lvl);srsUpdate(it.id,ok);
+  document.getElementById("cb").classList.add("hidden");document.getElementById("kin").disabled=true;
+  document.getElementById("fb").innerHTML=(ok?`<div class="flash ok">✅ ${esc(it.answer)} — ${esc(it.hintFr)}</div>`:`<div class="flash no">❌ ${esc(it.answer)} — ${esc(it.hintFr)}</div>`)
+    +`<button class="btn block" style="margin-top:12px" onclick="konjNext()">${SES.si<SES.items.length-1?'Suivant →':'Continuer →'}</button>`;
+  if(ok)addXp(7);
+}
+function konjNext(){SES.locked=false;if(SES.si<SES.items.length-1){SES.si++;renderKonj();}else blockDone();}
+
+/* --- Associer les paires (matching) --- */
+function bPaare(){const set=pickLevel(INHALTE.paare,1)[0];if(!set){blockDone();return;}SES.pset=set;renderPaare();}
+function renderPaare(){
+  const set=SES.pset;
+  SES.left=shuffle(set.pairs.map((p,i)=>({t:p[0],i})));
+  SES.right=shuffle(set.pairs.map((p,i)=>({t:p[1],i})));
+  SES.sel=null;SES.matched=0;
+  vw().innerHTML=head(`🔗 Associe les paires <span class="lvltag">${set.lvl}</span>`)+`
+     <p class="sm muted">Touche un mot allemand puis sa traduction.</p>
+     <div class="match">
+       <div class="col" id="colL">${SES.left.map((x,k)=>`<button class="pairbtn" data-side="L" data-i="${x.i}" data-k="${k}" onclick="pairTap(this)">${esc(x.t)}</button>`).join("")}</div>
+       <div class="col" id="colR">${SES.right.map((x,k)=>`<button class="pairbtn" data-side="R" data-i="${x.i}" data-k="${k}" onclick="pairTap(this)">${esc(x.t)}</button>`).join("")}</div>
+     </div><div id="fb"></div></div>`;
+}
+function pairTap(b){
+  if(b.classList.contains("ok"))return;
+  if(!SES.sel){if(b.dataset.side!=="L"){return;}SES.sel=b;b.classList.add("sel");return;}
+  if(b.dataset.side==="L"){SES.sel.classList.remove("sel");SES.sel=b;b.classList.add("sel");return;}
+  // b is R, SES.sel is L
+  const ok=SES.sel.dataset.i===b.dataset.i;
+  if(ok){SES.sel.classList.remove("sel");SES.sel.classList.add("ok");b.classList.add("ok");SES.matched++;record(true,SES.pset.lvl);addXp(4);
+    if(SES.matched===SES.pset.pairs.length){document.getElementById("fb").innerHTML=`<div class="flash ok">✅ Toutes les paires trouvées !</div><button class="btn block" style="margin-top:12px" onclick="blockDone()">Continuer →</button>`;}
+  }else{b.classList.add("err");const s=SES.sel;setTimeout(()=>{b.classList.remove("err");s.classList.remove("sel");},500);SES.sel=null;record(false,SES.pset.lvl);}
+}
+
+/* ---------- TTS ---------- */
+let deVoice=null;
+function loadVoices(){const v=speechSynthesis.getVoices();deVoice=v.find(x=>x.lang&&x.lang.toLowerCase().startsWith("de"))||null;}
+if("speechSynthesis"in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices;}
+function speak(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="de-DE";u.rate=.9;if(deVoice)u.voice=deVoice;speechSynthesis.speak(u);}catch(e){}}
+
+/* ===================================================================
+   CELEBRATION
+   =================================================================== */
+function celebrate(nb,nc,lvl){
+  confetti();let extra="";
+  if(lvl){extra+=`<div class="card on" style="border:1.5px solid #9be7c4;background:#effbf5;margin:14px 0 0"><div style="font-size:34px">🎓</div><b>Niveau ${lvl} débloqué !</b><div class="muted sm">De nouveaux contenus plus difficiles arrivent — en douceur.</div></div>`;
+    sendMail(`🎓 ${S.user.name||"Elle"} a atteint le niveau ${lvl}`,`${S.user.name||"Ta chérie"} vient de passer au niveau ${lvl} en allemand ! 🎉`,"level_"+lvl);}
+  if(nc){extra+=`<div class="card on" style="border:1.5px solid var(--gold);background:#fffaf0;margin:14px 0 0"><div style="font-size:34px">🎟️</div><b>Nouveau bon débloqué !</b><div class="muted sm">${esc(nc.t)} — ${esc(nc.d)}</div><div class="sm" style="color:var(--good);margin-top:6px">📧 Ton chéri vient d'être prévenu</div></div>`;
+    sendMail(`🎟️ ${S.user.name||"Elle"} a débloqué un bon : ${nc.t}`,`${S.user.name||"Ta chérie"} a atteint ${nc.m} jours de série 🔥\n\nBon à honorer : ${nc.t} (${nc.d}).\n\nC'est le moment de la récompenser ❤️`,"coupon_"+nc.m);}
+  if(nb&&nb.length){extra+=`<div class="sm" style="margin-top:12px">Badges : ${nb.map(b=>b.ic+" "+b.t).join(" · ")}</div>`;
+    sendMail(`🏅 ${S.user.name||"Elle"} a gagné un badge`,`Badge : ${nb.map(b=>b.t).join(", ")}. Série : ${S.streak.aktuell} jours.`,"badge_"+todayStr()+"_"+nb.map(b=>b.id).join(""));}
+  const acc=S.sessions.length?S.sessions[S.sessions.length-1].genauigkeit:0;
+  openModal(`<div class="emo">🎉</div><h2>Défi terminé !</h2>
+    <p class="muted">Série : <b>${S.streak.aktuell} jours</b> 🔥 · Précision ${acc}% · +20 XP</p>${extra}
+    <button class="big-cta" style="margin-top:18px" onclick="closeModal();SES=null;show('home')">Continuer</button>
+    <button class="btn ghost block" style="margin-top:10px" onclick="closeModal();SES=null;shareWithPartner()">💌 Montrer à mon chéri</button>`);
+}
+function confetti(){
+  const c=document.getElementById("confetti");c.classList.remove("hidden");
+  const ctx=c.getContext("2d");c.width=innerWidth;c.height=innerHeight;
+  const cols=["#ff6b6b","#f4b942","#7b2d52","#28a878","#ff9eb5"];
+  let P=Array.from({length:140},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height,r:4+Math.random()*6,c:cols[Math.floor(Math.random()*cols.length)],vy:2+Math.random()*4,vx:-2+Math.random()*4,a:Math.random()*6}));
+  let f=0;(function loop(){ctx.clearRect(0,0,c.width,c.height);f++;P.forEach(p=>{p.y+=p.vy;p.x+=p.vx;p.a+=.1;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.a);ctx.fillStyle=p.c;ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.6);ctx.restore();});if(f<160)requestAnimationFrame(loop);else c.classList.add("hidden");})();
+}
+function openModal(h){document.getElementById("modal-root").innerHTML=`<div class="overlay" onclick="if(event.target===this)closeModal()"><div class="sheet">${h}</div></div>`;}
+function closeModal(){document.getElementById("modal-root").innerHTML="";}
+
+/* ---------- unlock / share ---------- */
+function unlockApps(){
+  openModal(`<div class="emo">🔓</div><h2>Débloquer tes apps</h2><p class="muted">On lance le raccourci « CoeurLingoFait » qui autorise tes apps pour aujourd'hui.</p>
+    <a class="big-cta block" href="shortcuts://run-shortcut?name=CoeurLingoFait&input=${todayStr()}" style="text-decoration:none;margin-top:8px">Lancer le raccourci</a>
+    <button class="btn ghost block" style="margin-top:10px" onclick="closeModal()">Fermer</button>
+    <p class="sm muted" style="margin-top:12px">Pas encore configuré ? Va dans 🛡️ Blocage des apps.</p>`);
+}
+async function shareWithPartner(){
+  if(S.user.freundEmail&&S.user.w3key){
+    await sendMail(`💪 ${S.user.name||"Elle"} a fait sa session du jour`,`${S.user.name||"Ta chérie"} vient de terminer son défi !\nSérie : ${S.streak.aktuell} jours 🔥 · niveau ${S.user.niveau} · ${weekMinutes()} min cette semaine · ligue ${ligaSorted().findIndex(x=>x.me)+1}/6.`,null);
+    openModal(`<div class="emo">💌</div><h2>Envoyé !</h2><p class="muted">Ton chéri vient de voir ton effort du jour ❤️</p><button class="btn block" onclick="closeModal()">Super</button>`);
+  }else openModal(`<div class="emo">📧</div><h2>Presque !</h2><p class="muted">Ajoute l'e-mail de ton chéri dans ⚙️ Réglages pour qu'il reçoive tes progrès.</p><button class="btn block" onclick="closeModal();show('settings')">Configurer</button>`);
+}
+
+/* ===================================================================
+   LIGUE / STATS / RÉCOMPENSES / RÉGLAGES / BLOCAGE
+   =================================================================== */
+function renderLiga(){
+  advanceLiga();const a=ligaSorted();
+  document.getElementById("view-liga").innerHTML=`<div class="card"><h2>🏆 Ligue de la semaine</h2>
+     <p class="muted sm">Reset chaque lundi. Reste devant en t'entraînant chaque jour !</p>
+     ${a.map((p,i)=>`<div class="lg ${p.me?'me':''}"><div class="rk">${i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)}</div><div class="av">${p.av}</div><div class="nm">${esc(p.name)}${p.me?' (toi)':''}</div><div class="pts">${p.pts} XP</div></div>`).join("")}</div>
+   <div class="card sm muted">💡 Les concurrents progressent seuls chaque jour. Si tu sautes un jour, ils te dépassent — garde le rythme !</div>`;
+}
+function renderStats(){
+  const d7=lastNDays(7),d30=lastNDays(30);
+  document.getElementById("view-stats").innerHTML=`
+   <div class="card"><h2>📈 Cette semaine</h2>${barChart(d7.map(d=>({label:d.slice(8),val:minOn(d)})),"min")}</div>
+   <div class="card"><h2>🗓️ 30 derniers jours</h2>
+     <div class="heat">${d30.map(d=>{const m=minOn(d),lvl=m===0?0:m<5?1:m<10?2:3,col=["#f0dfe4","#f6c6d2","#f08aa3","#e8516a"][lvl];return `<span title="${d}: ${m} min" style="background:${col}"></span>`}).join("")}</div>
+     <p class="sm muted" style="margin-top:8px">Total du mois : <b>${Math.round(d30.reduce((a,d)=>a+secOn(d),0)/60)} min</b> · ${d30.filter(d=>minOn(d)>0).length} jours actifs</p></div>
+   <div class="card"><h2>🌟 Bilan</h2><div class="statgrid">
+     <div class="stat"><b>${S.streak.aktuell}</b><span class="sm muted">série actuelle</span></div>
+     <div class="stat"><b>${S.streak.längste}</b><span class="sm muted">record 🔥</span></div>
+     <div class="stat"><b>${S.wordsSeen}</b><span class="sm muted">mots vus</span></div>
+     <div class="stat"><b>${S.user.niveau}</b><span class="sm muted">niveau</span></div>
+   </div></div>`;
+}
+function lastNDays(n){const a=[];for(let i=n-1;i>=0;i--)a.push(addDays(todayStr(),-i));return a;}
+function secOn(d){return S.sessions.filter(s=>s.datum===d).reduce((a,s)=>a+s.dauerSek,0);}
+function minOn(d){return Math.round(secOn(d)/60);}
+function barChart(data,unit){
+  const W=320,H=140,pad=22,max=Math.max(1,...data.map(d=>d.val)),gap=(W-pad*2)/data.length,bw=gap*0.62;
+  return `<div class="svgwrap"><svg viewBox="0 0 ${W} ${H}" width="100%">${data.map((d,i)=>{const h=(d.val/max)*(H-40),x=pad+i*gap+(gap-bw)/2,y=H-22-h;return `<rect x="${x}" y="${y}" width="${bw}" height="${Math.max(2,h)}" rx="4" fill="#e8516a"/><text x="${x+bw/2}" y="${H-8}" font-size="9" fill="#8a6f7c" text-anchor="middle">${d.label}</text>${d.val>0?`<text x="${x+bw/2}" y="${y-3}" font-size="9" fill="#7b2d52" text-anchor="middle" font-weight="700">${d.val}</text>`:''}`}).join("")}</svg></div><p class="sm muted center">en ${unit}</p>`;
+}
+function renderReward(){
+  document.getElementById("view-reward").innerHTML=`<div class="card"><h2>🎟️ Tes bons à échanger</h2>
+     <p class="muted sm">Chaque palier de série débloque une activité avec ton chéri. Il est prévenu par e-mail à chaque palier !</p>
+     ${MILESTONES.map(m=>{const e=S.coupons.find(c=>c.meilenstein===m),c=COUPONS[m];return `<div class="coupon ${e?'on':'locked'}"><div class="d">${m}<div class="sm" style="font-weight:600;color:var(--muted)">jours</div></div>
+       <div class="t"><b>${esc(c.t)}</b><span class="muted sm">${esc(c.d)}</span>${e?`<div class="st">${e.status==="eingelöst"?'✅ échangé':'🎁 débloqué'}</div>`:`<div class="sm muted">🔒 plus que ${Math.max(0,m-S.streak.aktuell)} jours</div>`}</div>
+       ${e&&e.status!=="eingelöst"?`<button class="btn gold" onclick="redeem(${m})">Échanger</button>`:''}</div>`}).join("")}</div>
+   <div class="card"><h2>🏅 Badges</h2><div class="grid3">${BADGES.map(b=>`<div class="badge ${hasBadge(b.id)?'on':''}"><div class="ic">${b.ic}</div>${esc(b.t)}</div>`).join("")}</div></div>`;
+}
+function redeem(m){const c=S.coupons.find(x=>x.meilenstein===m);if(!c)return;c.status="eingelöst";save();
+  sendMail(`💝 ${S.user.name||"Elle"} échange son bon : ${COUPONS[m].t}`,`${S.user.name||"Ta chérie"} souhaite échanger « ${COUPONS[m].t} » (${COUPONS[m].d}). À toi de jouer ❤️`,null);
+  openModal(`<div class="emo">💝</div><h2>Bon envoyé !</h2><p class="muted">Ton chéri a reçu ta demande : <b>${esc(COUPONS[m].t)}</b></p><button class="btn block" onclick="closeModal();renderReward()">Génial</button>`);}
+function renderSettings(){
+  document.getElementById("view-settings").innerHTML=`<div class="card"><h2>⚙️ Réglages</h2>
+     <label>Ton prénom</label><input id="setName" value="${esc(S.user.name)}"/>
+     <label>E-mail de ton chéri</label><input id="setEmail" type="email" value="${esc(S.user.freundEmail)}"/>
+     <label>Clé Web3Forms (access key)</label><input id="setKey" value="${esc(S.user.w3key)}" placeholder="colle ta clé ici"/>
+     <p class="sm muted">Gratuit sur web3forms.com → crée une clé liée à l'e-mail de ton chéri (voir README).</p>
+     <label>Niveau (ajuste si besoin)</label><select id="setNiv">${LEVELS.map(l=>`<option ${S.user.niveau===l?'selected':''}>${l}</option>`).join("")}</select>
+     <button class="btn block" onclick="saveSettings()">Enregistrer</button>
+     <button class="btn ghost block" style="margin-top:18px" onclick="testMail()">📧 E-mail de test</button>
+     <button class="btn ghost block" style="margin-top:10px" onclick="simDay()">🧪 Simuler un jour (debug)</button>
+     <button class="btn ghost block" style="margin-top:10px;color:var(--bad)" onclick="resetAll()">♻️ Réinitialiser</button></div>`;
+}
+function saveSettings(){S.user.name=val("setName").trim();S.user.freundEmail=val("setEmail").trim();S.user.w3key=val("setKey").trim();S.user.niveau=val("setNiv");save();renderHeader();
+  openModal(`<div class="emo">✅</div><h2>Enregistré</h2><button class="btn block" onclick="closeModal();show('home')">OK</button>`);}
+async function testMail(){if(!val("setEmail")||!val("setKey")){alert("Renseigne l'e-mail et la clé Web3Forms d'abord.");return;}S.user.freundEmail=val("setEmail").trim();S.user.w3key=val("setKey").trim();save();
+  await sendMail("💞 Test Cœur·Lingo",`Test : ${S.user.name||"ta chérie"} a configuré les notifications. Tu recevras ses progrès ici ❤️`,null);
+  openModal(`<div class="emo">📨</div><h2>Test envoyé</h2><p class="muted">Vérifie la boîte mail de ton chéri.</p><button class="btn block" onclick="closeModal()">OK</button>`);}
+function simDay(){S.streak.letzterTag=addDays(todayStr(),-1);S.sessions.push({datum:addDays(todayStr(),-1),dauerSek:300,xp:40,aufgaben:11,genauigkeit:90});S.liga.lastTag=addDays(todayStr(),-1);save();
+  openModal(`<div class="emo">🧪</div><h2>Jour simulé</h2><p class="muted">Fais ta session du jour pour voir la série grimper.</p><button class="btn block" onclick="closeModal();show('home')">OK</button>`);}
+function resetAll(){if(confirm("Tout réinitialiser ?")){localStorage.removeItem(KEY);location.reload();}}
+function renderBlocker(){
+  document.getElementById("view-blocker").innerHTML=`<div class="card"><h2>🛡️ Bloquer Instagram, WhatsApp & co. (iPhone)</h2>
+     <p class="muted sm">Sans app native, on utilise les <b>Raccourcis iOS</b> : tes apps de distraction te renvoient ici tant que le défi n'est pas fait. Une fois terminé, le bouton « Débloquer » les réautorise pour la journée.</p></div>
+   <div class="card"><h3>① Raccourci « CoeurLingoFait »</h3>
+     <div class="step"><div class="n">1</div><div>App <b>Raccourcis</b> → <b>+</b> → nom : <code>CoeurLingoFait</code></div></div>
+     <div class="step"><div class="n">2</div><div>Action <b>« Texte »</b> = date du jour, puis <b>« Enregistrer le fichier »</b> dans iCloud Drive sous <code>coeurlingo.txt</code> (écraser : oui).</div></div>
+     <div class="step"><div class="n">3</div><div>C'est ce raccourci que lance le bouton <b>🔓 Débloquer</b>.</div></div></div>
+   <div class="card"><h3>② Raccourci « Portier »</h3>
+     <div class="step"><div class="n">1</div><div><code>Portier</code> : <b>« Obtenir le fichier »</b> <code>coeurlingo.txt</code> (autoriser l'absence d'erreur).</div></div>
+     <div class="step"><div class="n">2</div><div><b>Si</b> le texte = la date du jour → ne rien faire. <b>Sinon</b> → <b>« Ouvrir l'app »</b> → Cœur·Lingo.</div></div></div>
+   <div class="card"><h3>③ Automatisations (une par app)</h3>
+     <div class="step"><div class="n">1</div><div>Onglet <b>Automatisation</b> → <b>+</b> → <b>App</b> → <b>Instagram</b> → <b>Est ouverte</b>.</div></div>
+     <div class="step"><div class="n">2</div><div>Action <b>« Exécuter le raccourci »</b> → <code>Portier</code>. Désactive <b>« Demander avant d'exécuter »</b>.</div></div>
+     <div class="step"><div class="n">3</div><div>Répète pour <b>WhatsApp, YouTube, Snapchat, TikTok</b>…</div></div></div>
+   <div class="card" style="border:1.5px solid var(--gold);background:#fffaf0"><h3>🔒 Option « blocage dur »</h3>
+     <p class="sm">Réglages → <b>Temps d'écran</b> → limite 1 min sur les réseaux + un <b>code Temps d'écran que ton chéri choisit</b>. Là c'est vraiment verrouillé — mais le déblocage redevient manuel.</p></div>
+   <p class="sm muted center">⚠️ Méthode douce : contournable. Le blocage 100 % infalsifiable nécessitera une app native (phase 2).</p>
+   <button class="btn block" onclick="show('home')">← Retour</button>`;
+}
+
+/* ---------- onboarding ---------- */
+function onboarding(){
+  openModal(`<div class="emo">💞</div><h2>Bienvenue sur Cœur·Lingo</h2>
+    <p class="muted">5 minutes par jour pour parler allemand — et montrer à ton chéri tes progrès.</p>
+    <div style="text-align:left;margin-top:16px"><label>Ton prénom</label><input id="obName" placeholder="ex. Camille"/>
+      <label>E-mail de ton chéri (optionnel)</label><input id="obEmail" type="email" placeholder="lui@exemple.com"/></div>
+    <button class="big-cta" style="margin-top:8px" onclick="finishOnboarding()">C'est parti 🚀</button>`);
+}
+function finishOnboarding(){S=freshState(val("obName").trim(),val("obEmail").trim());save();closeModal();renderHeader();show("home");}
+
+/* ---------- utils ---------- */
+function val(id){const e=document.getElementById(id);return e?e.value:"";}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function q(s){return "'"+String(s).replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/\n/g," ")+"'";}
+
+/* ---------- boot ---------- */
+function boot(){
+  if(!S){onboarding();return;}
+  rolloverXp();advanceLiga();ensureChecklist();weeklyReportIfDue();renderHeader();show("home");
+}
+boot();
+if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
