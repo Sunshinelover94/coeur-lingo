@@ -161,6 +161,7 @@ code{background:#f3e6ec;padding:2px 6px;border-radius:6px;font-size:13px;color:v
 <script src="data/inhalte-b2c1.js"></script>
 <script src="data/i18n-en.js"></script>
 <script src="data/inhalte-themen.js"></script>
+<script src="data/thema-tags.js"></script>
 <script>
 /* =====================================================================
    Cœur·Lingo — Engine v2 + i18n (EN principal, FR optionnel)
@@ -430,6 +431,7 @@ function mergeI18nEN(){
   (INHALTE.grammatik||[]).forEach(g=>{const e=gm[g.id];if(e){g.erklEn=e.erklEn;(g.items||[]).forEach((q,i)=>{if(e.explainEn&&e.explainEn[i]!=null)q.explainEn=e.explainEn[i];});}});
   if(M.komplimente)INHALTE.komplimenteEn=M.komplimente.map(x=>x.en);
 }
+function applyThemaTags(){const T=window.THEMA_TAGS;if(!T)return;["vokabeln","uebersetzen","luecken","dialoge","paare"].forEach(k=>(INHALTE[k]||[]).forEach(it=>{if(!it.thema&&T[it.id])it.thema=T[it.id];}));}
 
 /* ---------- daily plan ---------- */
 function planForDay(){
@@ -912,7 +914,7 @@ function q(s){return "'"+String(s).replace(/\\/g,"\\\\").replace(/'/g,"\\'").rep
 
 /* ---------- boot ---------- */
 function boot(){
-  mergeI18nEN();
+  mergeI18nEN();applyThemaTags();
   if(!S){onboarding();return;}
   if(!S.user.lang)S.user.lang="en";
   rolloverXp();advanceLiga();ensureChecklist();weeklyReportIfDue();renderHeader();show("home");

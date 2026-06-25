@@ -1,6 +1,6 @@
 /* Cœur·Lingo — Service Worker (cache-first, offline-fähig) */
-const CACHE="coeurlingo-v3";
-const CORE=["./","./index.html","./data/inhalte.js","./data/inhalte-b2c1.js","./data/i18n-en.js","./data/inhalte-themen.js","./manifest.webmanifest"];
+const CACHE="coeurlingo-v4";
+const CORE=["./","./index.html","./data/inhalte.js","./data/inhalte-b2c1.js","./data/i18n-en.js","./data/inhalte-themen.js","./data/thema-tags.js","./manifest.webmanifest"];
 const OPT=["./icon-192.png","./icon-512.png"];
 
 self.addEventListener("install",e=>{

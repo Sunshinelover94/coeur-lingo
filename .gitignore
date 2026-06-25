@@ -4,5 +4,7 @@ build-b2c1.js
 build-dump.js
 build-i18n.js
 build-themen.js
+build-dump-untagged.js
+build-tags.js
 qa-content.js
 data/_dump/
