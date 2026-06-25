@@ -1,4 +1,7 @@
 # Dev-/Build-Hilfsdateien (nicht für die Live-App nötig)
 icon-candidates/
 build-b2c1.js
+build-dump.js
+build-i18n.js
 qa-content.js
+data/_dump/
