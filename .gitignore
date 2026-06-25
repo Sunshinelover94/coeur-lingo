@@ -3,5 +3,6 @@ icon-candidates/
 build-b2c1.js
 build-dump.js
 build-i18n.js
+build-themen.js
 qa-content.js
 data/_dump/

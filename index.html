@@ -160,6 +160,7 @@ code{background:#f3e6ec;padding:2px 6px;border-radius:6px;font-size:13px;color:v
 <script src="data/inhalte.js"></script>
 <script src="data/inhalte-b2c1.js"></script>
 <script src="data/i18n-en.js"></script>
+<script src="data/inhalte-themen.js"></script>
 <script>
 /* =====================================================================
    Cœur·Lingo — Engine v2 + i18n (EN principal, FR optionnel)
@@ -184,6 +185,7 @@ const STR={
   btn_share:"💌 Show my progress to my partner",btn_bonus:"↺ Do a bonus session",
   stat_streak:"streak 🔥",stat_week:"min / week",stat_league:"league 🏆",
   btn_blocker:"🛡️ Set up app blocking (iPhone)",
+  practice_theme:"🎯 Practice a theme",pick_theme_title:"Choose a theme",no_themes:"More themed content is on the way.",
   block_n:(a,b)=>`Block ${a} / ${b}`,
   vocab_new:(i,n)=>`🗂️ New word ${i}/${n}`,vocab_tap:"Tap to reveal 👆",listen:"🔊 Listen",
   vocab_q:"Did you know this word?",vocab_no:"❌ Not yet",vocab_yes:"✅ I knew it",
@@ -252,6 +254,7 @@ const STR={
   btn_share:"💌 Montrer mes progrès à mon chéri",btn_bonus:"↺ Refaire une session bonus",
   stat_streak:"série 🔥",stat_week:"min / sem.",stat_league:"ligue 🏆",
   btn_blocker:"🛡️ Configurer le blocage des apps (iPhone)",
+  practice_theme:"🎯 Entraîner un thème",pick_theme_title:"Choisis un thème",no_themes:"Du contenu par thème arrive bientôt.",
   block_n:(a,b)=>`Bloc ${a} / ${b}`,
   vocab_new:(i,n)=>`🗂️ Nouveau mot ${i}/${n}`,vocab_tap:"Touche pour révéler 👆",listen:"🔊 Écouter",
   vocab_q:"Tu connaissais ce mot ?",vocab_no:"❌ Pas encore",vocab_yes:"✅ Je savais",
@@ -345,6 +348,31 @@ const TYPES={
   paare:{icon:"🔗",lbl:{en:"Match the pairs",fr:"Associer les paires"}}
 };
 function tyLbl(ty){return TYPES[ty].lbl[L()]||TYPES[ty].lbl.en;}
+const THEMA_LABELS={
+ familie:{en:"Family",fr:"Famille"}, wegbeschreibung:{en:"Asking directions",fr:"Demander son chemin"},
+ "urlaub-reisen":{en:"Holidays & travel",fr:"Vacances & voyages"}, "arzt-gesundheit":{en:"Doctor & health",fr:"Médecin & santé"},
+ einkaufen:{en:"Shopping & groceries",fr:"Courses & alimentation"}, restaurant:{en:"Restaurant & food",fr:"Restaurant & repas"},
+ wohnung:{en:"Home & flat",fr:"Logement"}, "arbeit-beruf":{en:"Work & job",fr:"Travail & métier"},
+ "amt-behoerden":{en:"Authorities & admin",fr:"Administration"}, "wetter-jahreszeiten":{en:"Weather & seasons",fr:"Météo & saisons"},
+ "hobbys-freizeit":{en:"Hobbies & leisure",fr:"Loisirs"}, "tagesablauf-zeit":{en:"Daily routine & time",fr:"Routine & temps"},
+ kleidung:{en:"Clothes & looks",fr:"Vêtements & apparence"}, "telefon-termine":{en:"Phone & appointments",fr:"Téléphone & rendez-vous"},
+ "gefuehle-smalltalk":{en:"Feelings & small talk",fr:"Émotions & small talk"}, "verkehr-oepnv":{en:"Public transport",fr:"Transports en commun"},
+ "bank-geld":{en:"Bank & money",fr:"Banque & argent"}, "post-pakete":{en:"Post & parcels",fr:"Poste & colis"},
+ "muelltrennung-recycling":{en:"Recycling & waste",fr:"Tri & recyclage"}, "apotheke-medikamente":{en:"Pharmacy & medicine",fr:"Pharmacie & médicaments"},
+ zahnarzt:{en:"At the dentist",fr:"Chez le dentiste"}, "sport-fitness":{en:"Sport & fitness",fr:"Sport & fitness"},
+ "friseur-beauty":{en:"Hairdresser & beauty",fr:"Coiffeur & beauté"}, "umzug-einrichten":{en:"Moving & furnishing",fr:"Déménagement & ameublement"},
+ "handwerker-reparaturen":{en:"Repairs & tradespeople",fr:"Réparations & artisans"}, haustiere:{en:"Pets",fr:"Animaux de compagnie"},
+ "kochen-rezepte":{en:"Cooking & recipes",fr:"Cuisine & recettes"}, "feste-feiertage":{en:"Celebrations & holidays",fr:"Fêtes & jours fériés"},
+ "beziehung-liebe":{en:"Relationship & love",fr:"Couple & amour"}, ausgehen:{en:"Going out",fr:"Sorties"},
+ "meinung-diskutieren":{en:"Opinions & debate",fr:"Opinions & débat"}
+};
+function thLabel(id){const l=THEMA_LABELS[id];return l?(l[L()]||l.en):id;}
+function availableThemes(){const s=new Set();["vokabeln","uebersetzen","luecken","dialoge","paare"].forEach(k=>(INHALTE[k]||[]).forEach(it=>{if(it.thema)s.add(it.thema);}));return [...s].filter(id=>THEMA_LABELS[id]).sort((a,b)=>thLabel(a).localeCompare(thLabel(b)));}
+function openThemePicker(){
+  const ths=availableThemes();
+  if(!ths.length){openModal(`<div class="emo">🎯</div><h2>${t("pick_theme_title")}</h2><p class="muted">${t("no_themes")}</p><button class="btn block" onclick="closeModal()">${t("ok")}</button>`);return;}
+  openModal(`<div class="emo">🎯</div><h2>${t("pick_theme_title")}</h2><div style="max-height:52vh;overflow:auto;text-align:left;margin-top:8px">${ths.map(id=>`<button class="btn ghost block" style="margin-bottom:8px" onclick="closeModal();startSession('${id}')">${esc(thLabel(id))}</button>`).join("")}</div><button class="btn ghost block" style="margin-top:6px" onclick="closeModal()">${t("close")}</button>`);
+}
 
 /* ---------- content accessors (EN default, FR fallback / vice versa) ---------- */
 function gMean(it){return L()==="fr"?it.fr:(it.en||it.fr);}
@@ -441,7 +469,8 @@ function maybeLevelUp(){
   const lvl=S.user.niveau;
   if(S.mastery[lvl]>=LEVELUP_TH[lvl]){const nx=LEVELS[i+1];S.user.niveau=nx;save();grantBadge(nx.toLowerCase());SES&&(SES.leveledTo=nx);}
 }
-function poolFor(arr){const ci=curIdx();return arr.filter(it=>levelIdx(it.lvl)<=ci);}
+function themedPool(arr){return (SES&&SES.theme)?arr.filter(it=>it.thema===SES.theme):arr;}
+function poolFor(arr){const ci=curIdx();return themedPool(arr).filter(it=>levelIdx(it.lvl)<=ci);}
 function pickSRS(arr,n){
   const pool=poolFor(arr);
   const due=shuffle(pool.filter(it=>isDue(it.id)));
@@ -564,6 +593,7 @@ function renderHome(){
      <div class="stat"><b>${weekMinutes()}</b><span class="sm muted">${t("stat_week")}</span></div>
      <div class="stat"><b>${rank()}<span class="sm">/6</span></b><span class="sm muted">${t("stat_league")}</span></div>
    </div></div>
+   <button class="btn ghost block" style="margin-bottom:10px" onclick="openThemePicker()">${t("practice_theme")}</button>
    <button class="btn ghost block" onclick="show('blocker')">${t("btn_blocker")}</button>`;
 }
 function weekMinutes(){const lw=addDays(todayStr(),-6);return Math.round(S.sessions.filter(s=>s.datum>=lw).reduce((a,s)=>a+s.dauerSek,0)/60);}
@@ -572,9 +602,10 @@ function weekMinutes(){const lw=addDays(todayStr(),-6);return Math.round(S.sessi
    SESSION
    =================================================================== */
 let SES=null;
-function startSession(){
+function startSession(theme){
   ensureChecklist();
-  SES={plan:S.checkliste.plan,bi:0,start:Date.now(),correct:0,total:0,items:[],si:0,locked:false,leveledTo:null};
+  const plan=theme?["vocab","uebersetzen","luecke","dialog","paare"]:S.checkliste.plan;
+  SES={plan,bi:0,start:Date.now(),correct:0,total:0,items:[],si:0,locked:false,leveledTo:null,theme:theme||null,bonus:!!theme};
   show("session");runBlock();
 }
 function vw(){return document.getElementById("view-session");}
@@ -584,7 +615,7 @@ function runBlock(){
   SES.si=0;SES.locked=false;
   ({vocab:bVocab,uebersetzen:bUeber,luecke:bLuecke,satzbau:bSatz,dialog:bDialog,grammatik:bGram,hoeren:bHoeren,konjugation:bKonj,paare:bPaare}[SES.plan[SES.bi]])();
 }
-function blockDone(){const it=S.checkliste.items[SES.bi];if(it)it.erledigt=true;save();SES.bi++;renderHeader();runBlock();}
+function blockDone(){if(!SES.bonus){const it=S.checkliste.items[SES.bi];if(it)it.erledigt=true;save();}SES.bi++;renderHeader();runBlock();}
 function finishSession(){completeSession(Math.round((Date.now()-SES.start)/1000));}
 function head(tag){return sesProgress()+`<div class="card"><span class="tag">${tag}</span>`;}
 
