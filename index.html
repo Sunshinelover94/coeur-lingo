@@ -187,6 +187,11 @@ const STR={
   stat_streak:"streak 🔥",stat_week:"min / week",stat_league:"league 🏆",
   btn_blocker:"🛡️ Set up app blocking (iPhone)",
   practice_theme:"🎯 Practice a theme",pick_theme_title:"Choose a theme",no_themes:"More themed content is on the way.",
+  save_progress:"💾 Save progress (backup)",restore_progress:"📂 Restore from backup",import_bad:"Invalid backup file.",
+  backup_banner:(s)=>`💾 Protect your ${s}-day streak — save a backup.`,backup_btn:"Back up now",
+  pl_title:"Quick level check?",pl_sub:"~2 minutes — we'll place you at the right level. Or skip and start at A2.",pl_start:"Start the check",pl_skip:"Skip (start at A2)",pl_q:"Level check",pl_done:(l)=>`We'll start you at ${l}. You can change this anytime in Settings.`,
+  review_mistakes:(n)=>`🔁 Review my mistakes (${n})`,
+  record:"🎙️ Record",stop_record:"⏹ Stop",play_mine:"▶️ Play mine",mic_denied:"Microphone not available.",
   block_n:(a,b)=>`Block ${a} / ${b}`,
   vocab_new:(i,n)=>`🗂️ New word ${i}/${n}`,vocab_tap:"Tap to reveal 👆",listen:"🔊 Listen",
   vocab_q:"Did you know this word?",vocab_no:"❌ Not yet",vocab_yes:"✅ I knew it",
@@ -256,6 +261,11 @@ const STR={
   stat_streak:"série 🔥",stat_week:"min / sem.",stat_league:"ligue 🏆",
   btn_blocker:"🛡️ Configurer le blocage des apps (iPhone)",
   practice_theme:"🎯 Entraîner un thème",pick_theme_title:"Choisis un thème",no_themes:"Du contenu par thème arrive bientôt.",
+  save_progress:"💾 Sauvegarder ma progression",restore_progress:"📂 Restaurer une sauvegarde",import_bad:"Fichier de sauvegarde invalide.",
+  backup_banner:(s)=>`💾 Protège ta série de ${s} jours — fais une sauvegarde.`,backup_btn:"Sauvegarder",
+  pl_title:"Petit test de niveau ?",pl_sub:"~2 minutes — on te place au bon niveau. Ou passe et commence en A2.",pl_start:"Commencer le test",pl_skip:"Passer (commencer en A2)",pl_q:"Test de niveau",pl_done:(l)=>`On démarre au niveau ${l}. Modifiable à tout moment dans les Réglages.`,
+  review_mistakes:(n)=>`🔁 Revoir mes erreurs (${n})`,
+  record:"🎙️ S'enregistrer",stop_record:"⏹ Stop",play_mine:"▶️ M'écouter",mic_denied:"Micro non disponible.",
   block_n:(a,b)=>`Bloc ${a} / ${b}`,
   vocab_new:(i,n)=>`🗂️ Nouveau mot ${i}/${n}`,vocab_tap:"Touche pour révéler 👆",listen:"🔊 Écouter",
   vocab_q:"Tu connaissais ce mot ?",vocab_no:"❌ Pas encore",vocab_yes:"✅ Je savais",
@@ -410,7 +420,7 @@ function freshState(name,email,lang){
     xp:{gesamt:0,heute:0,heuteDatum:todayStr()},
     mastery:{A2:0,B1:0,B2:0,C1:0},
     recent:[], srs:{}, wordsSeen:0, seenIds:[],
-    sessions:[], badges:[], coupons:[],
+    sessions:[], badges:[], coupons:[], mistakes:[], backedUp:"",
     liga:{week:weekKey(todayStr()),meineXpWoche:0,lastTag:todayStr(),
       npcs:NPC_SEED.map(n=>({...n,xpWoche:Math.round(rnd(0,n.rate))}))},
     checkliste:null, mailSent:{}
@@ -459,12 +469,15 @@ function srsUpdate(id,correct){
   c.due=dayIndex()+c.intv;S.srs[id]=c;save();
 }
 function isDue(id){const c=S.srs[id];return c&&c.due<=dayIndex();}
-function record(correct,lvl){
+function record(correct,lvl,id,type){
   SES.total++;if(correct)SES.correct++;
   S.recent.push(correct?1:0);if(S.recent.length>40)S.recent.shift();
   if(correct){const Lv=lvl||S.user.niveau;if(S.mastery[Lv]!=null)S.mastery[Lv]++;}
+  if(id&&type){correct?clearMistake(id):addMistake(id,type);}
   save();maybeLevelUp();
 }
+function addMistake(id,type){S.mistakes=(S.mistakes||[]).filter(m=>m.id!==id);S.mistakes.unshift({id,type});if(S.mistakes.length>60)S.mistakes.pop();}
+function clearMistake(id){S.mistakes=(S.mistakes||[]).filter(m=>m.id!==id);}
 function markSeen(id){if(!S.seenIds.includes(id)){S.seenIds.push(id);S.wordsSeen++;}}
 function maybeLevelUp(){
   const i=curIdx();if(i>=LEVELS.length-1)return;
@@ -472,7 +485,10 @@ function maybeLevelUp(){
   if(S.mastery[lvl]>=LEVELUP_TH[lvl]){const nx=LEVELS[i+1];S.user.niveau=nx;save();grantBadge(nx.toLowerCase());SES&&(SES.leveledTo=nx);}
 }
 function themedPool(arr){return (SES&&SES.theme)?arr.filter(it=>it.thema===SES.theme):arr;}
-function poolFor(arr){const ci=curIdx();return themedPool(arr).filter(it=>levelIdx(it.lvl)<=ci);}
+function poolFor(arr){
+  if(SES&&SES.mistakeSet)return arr.filter(it=>SES.mistakeSet.has(it.id));
+  const ci=curIdx();return themedPool(arr).filter(it=>levelIdx(it.lvl)<=ci);
+}
 function pickSRS(arr,n){
   const pool=poolFor(arr);
   const due=shuffle(pool.filter(it=>isDue(it.id)));
@@ -595,6 +611,8 @@ function renderHome(){
      <div class="stat"><b>${weekMinutes()}</b><span class="sm muted">${t("stat_week")}</span></div>
      <div class="stat"><b>${rank()}<span class="sm">/6</span></b><span class="sm muted">${t("stat_league")}</span></div>
    </div></div>
+   ${(S.streak.aktuell>=7&&!S.backedUp)?`<div class="card" style="border:1.5px solid var(--gold);background:#fffaf0;text-align:center"><b>${t("backup_banner",S.streak.aktuell)}</b><button class="btn gold block" style="margin-top:10px" onclick="exportProgress()">${t("backup_btn")}</button></div>`:""}
+   ${(S.mistakes&&S.mistakes.length)?`<button class="btn ghost block" style="margin-bottom:10px" onclick="startMistakeReview()">${t("review_mistakes",S.mistakes.length)}</button>`:""}
    <button class="btn ghost block" style="margin-bottom:10px" onclick="openThemePicker()">${t("practice_theme")}</button>
    <button class="btn ghost block" onclick="show('blocker')">${t("btn_blocker")}</button>`;
 }
@@ -649,7 +667,7 @@ function norm(s){return String(s).toLowerCase().replace(/ä/g,"ae").replace(/ö/
 function checkUeber(){
   if(SES.locked)return;const it=SES.items[SES.si];const inp=document.getElementById("uin").value;
   const ok=[it.de,...(it.alt||[])].some(a=>norm(a)===norm(inp));
-  SES.locked=true;record(ok,it.lvl);srsUpdate(it.id,ok);markSeen(it.id);
+  SES.locked=true;record(ok,it.lvl,it.id,"uebersetzen");srsUpdate(it.id,ok);markSeen(it.id);
   document.getElementById("cb").classList.add("hidden");document.getElementById("uin").disabled=true;
   document.getElementById("fb").innerHTML=(ok?`<div class="flash ok">${t("perfect_is",esc(it.de))}</div>`:`<div class="flash no">${t("answer_is",esc(it.de))}</div>`)
     +`<button class="btn block" style="margin-top:12px" onclick="ueberNext()">${SES.si<SES.items.length-1?t("next"):t("cont")}</button>`;
@@ -669,7 +687,7 @@ function renderMC(kind){
 }
 function answerMC(i){
   if(SES.locked)return;SES.locked=true;
-  const it=SES.items[SES.si];const lvl=SES.kind==="grammatik"?SES.gset.lvl:it.lvl;const ok=i===it.answer;record(ok,lvl);
+  const it=SES.items[SES.si];const lvl=SES.kind==="grammatik"?SES.gset.lvl:it.lvl;const ok=i===it.answer;record(ok,lvl,SES.kind==="luecke"?it.id:null,"luecke");
   const opts=vw().querySelectorAll(".opt");opts.forEach((o,k)=>{o.disabled=true;if(k===it.answer)o.classList.add("right");});
   if(!ok)opts[i].classList.add("wrong");
   const ex=SES.kind==="grammatik"?gGramEx(it):gExpl(it);
@@ -692,7 +710,7 @@ function pick(b){const a=document.getElementById("answer");if(b.parentElement.id
 function checkSatz(){
   if(SES.locked)return;const it=SES.items[SES.si];
   const got=[...document.getElementById("answer").children].map(c=>c.dataset.w).join(" ");
-  SES.locked=true;const ok=got===it.loesung;record(ok,it.lvl);
+  SES.locked=true;const ok=got===it.loesung;record(ok,it.lvl,it.id,"satzbau");
   document.getElementById("cb").classList.add("hidden");
   document.getElementById("fb").innerHTML=(ok?`<div class="flash ok">${t("perfect_is",esc(it.loesung))}</div>`:`<div class="flash no">${t("answer_is",esc(it.loesung))}</div>`)
     +`<div class="center" style="margin:10px 0"><button class="spk" onclick="speak(${q(it.loesung)})">${t("listen")}</button></div>`
@@ -703,10 +721,11 @@ function satzNext(){SES.locked=false;if(SES.si<SES.items.length-1){SES.si++;rend
 
 function bDialog(){const d=pickLevel(INHALTE.dialoge,1)[0];if(!d){blockDone();return;}SES.dlg=d;SES.items=d.zeilen;renderDialog();}
 function renderDialog(){
-  const z=SES.items[SES.si];
+  const z=SES.items[SES.si];recURL=null;
   vw().innerHTML=head(`🗣️ ${esc(SES.dlg.titel)} <span class="lvltag">${SES.dlg.lvl}</span>`)+`
      <div class="qtext">${esc(z.de)}</div><p class="muted">${esc(gDlgLine(SES.dlg,SES.si))}</p>
      <button class="bigspk" onclick="speak(${q(z.de)})">${t("listen")}</button>
+     <div class="row" style="margin-top:10px"><button class="btn ghost" onclick="toggleRecord(this)">${t("record")}</button><button id="playmine" class="btn ghost hidden" onclick="playMine()">${t("play_mine")}</button></div>
      <p class="sm muted center" style="margin:14px 0 0">${t("dlg_repeat")}</p></div>
    <button class="btn block" onclick="dlgNext()">${SES.si<SES.items.length-1?t("dlg_next"):t("dlg_end")}</button>`;
   setTimeout(()=>speak(z.de),350);
@@ -723,7 +742,7 @@ function renderHoeren(){
   setTimeout(()=>speak(it.audio),400);
 }
 function answerHoeren(i){
-  if(SES.locked)return;SES.locked=true;const it=SES.items[SES.si];const ok=i===it.answer;record(ok,it.lvl);
+  if(SES.locked)return;SES.locked=true;const it=SES.items[SES.si];const ok=i===it.answer;record(ok,it.lvl,it.id,"hoeren");
   const opts=vw().querySelectorAll(".opt");opts.forEach((o,k)=>{o.disabled=true;if(k===it.answer)o.classList.add("right");});
   if(!ok)opts[i].classList.add("wrong");
   document.getElementById("fb").innerHTML=(ok?`<div class="flash ok">${t("heard_ok")}</div>`:`<div class="flash no">${t("heard_no",esc(it.audio))}</div>`)
@@ -744,7 +763,7 @@ function renderKonj(){
 function checkKonj(){
   if(SES.locked)return;const it=SES.items[SES.si];const inp=document.getElementById("kin").value;
   const ok=[it.answer,...(it.alt||[])].some(a=>norm(a)===norm(inp));
-  SES.locked=true;record(ok,it.lvl);srsUpdate(it.id,ok);
+  SES.locked=true;record(ok,it.lvl,it.id,"konjugation");srsUpdate(it.id,ok);
   document.getElementById("cb").classList.add("hidden");document.getElementById("kin").disabled=true;
   const msg=esc(it.answer)+" — "+esc(gHint(it));
   document.getElementById("fb").innerHTML=(ok?`<div class="flash ok">${t("okFb",msg)}</div>`:`<div class="flash no">${t("noFb",msg)}</div>`)
@@ -865,6 +884,8 @@ function renderSettings(){
      <p class="sm muted">${t("set_key_hint")}</p>
      <label>${t("set_level")}</label><select id="setNiv">${LEVELS.map(l=>`<option ${S.user.niveau===l?'selected':''}>${l}</option>`).join("")}</select>
      <button class="btn block" onclick="saveSettings()">${t("save")}</button>
+     <button class="btn ghost block" style="margin-top:18px" onclick="exportProgress()">${t("save_progress")}</button>
+     <label class="btn ghost block" style="margin-top:10px;cursor:pointer">${t("restore_progress")}<input type="file" accept="application/json,.json" onchange="importProgressFile(this)" style="display:none"></label>
      <button class="btn ghost block" style="margin-top:18px" onclick="testMail()">${t("test_mail")}</button>
      <button class="btn ghost block" style="margin-top:10px" onclick="simDay()">${t("sim_day")}</button>
      <button class="btn ghost block" style="margin-top:10px;color:var(--bad)" onclick="resetAll()">${t("resetBtn")}</button></div>`;
@@ -905,17 +926,86 @@ function onboarding(){
       <label>${t("ob_email")}</label><input id="obEmail" type="email" placeholder="..."/></div>
     <button class="big-cta" style="margin-top:8px" onclick="finishOnboarding()">${t("ob_go")}</button>`);
 }
-function finishOnboarding(){const lang=val("obLang")||PENDING_LANG;S=freshState(val("obName").trim(),val("obEmail").trim(),lang);save();closeModal();renderHeader();show("home");}
+function finishOnboarding(){const lang=val("obLang")||PENDING_LANG;S=freshState(val("obName").trim(),val("obEmail").trim(),lang);save();closeModal();renderHeader();offerPlacement();}
 
 /* ---------- utils ---------- */
 function val(id){const e=document.getElementById(id);return e?e.value:"";}
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 function q(s){return "'"+String(s).replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/\n/g," ")+"'";}
 
+/* ---------- backup / restore ---------- */
+function exportProgress(){
+  try{
+    const blob=new Blob([JSON.stringify(S)],{type:"application/json"});const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");a.href=url;a.download="coeurlingo-backup.json";document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1500);S.backedUp=todayStr();save();renderHeader();
+    openModal(`<div class="emo">💾</div><h2>${t("saved")}</h2><button class="btn block" onclick="closeModal();show('home')">${t("ok")}</button>`);
+  }catch(e){alert(t("import_bad"));}
+}
+function importProgressFile(input){
+  const f=input.files&&input.files[0];if(!f)return;const r=new FileReader();
+  r.onload=()=>{try{const o=JSON.parse(r.result);if(!o||!o.user||!o.streak)throw 0;localStorage.setItem(KEY,JSON.stringify(o));location.reload();}catch(e){alert(t("import_bad"));}};
+  r.readAsText(f);
+}
+
+/* ---------- placement test ---------- */
+let PL=null;
+function offerPlacement(){
+  openModal(`<div class="emo">🧭</div><h2>${t("pl_title")}</h2><p class="muted">${t("pl_sub")}</p>
+    <button class="big-cta" style="margin-top:8px" onclick="startPlacement()">${t("pl_start")}</button>
+    <button class="btn ghost block" style="margin-top:10px" onclick="closeModal();renderHeader();show('home')">${t("pl_skip")}</button>`);
+}
+function startPlacement(){
+  const src=[...INHALTE.luecken,...INHALTE.grammatik.flatMap(g=>g.items.map(it=>({options:it.options,answer:it.answer,lvl:g.lvl,satz:it.q})))];
+  const pick=(lvl,n)=>shuffle(src.filter(x=>x.lvl===lvl&&x.satz)).slice(0,n);
+  const qs=[...pick("A2",3),...pick("B1",3),...pick("B2",3)];
+  PL={qs:shuffle(qs),i:0,c:{A2:0,B1:0,B2:0},tt:{A2:0,B1:0,B2:0}};
+  renderPlacement();
+}
+function renderPlacement(){
+  if(!PL||PL.i>=PL.qs.length){finishPlacement();return;}
+  const it=PL.qs[PL.i];
+  openModal(`<h3 class="center">${t("pl_q")} ${PL.i+1}/${PL.qs.length}</h3><div class="qtext">${esc(it.satz).replace("___","____")}</div>${it.options.map((o,k)=>`<button class="opt" onclick="plAns(${k})">${esc(o)}</button>`).join("")}`);
+}
+function plAns(k){const it=PL.qs[PL.i];PL.tt[it.lvl]++;if(k===it.answer)PL.c[it.lvl]++;PL.i++;renderPlacement();}
+function finishPlacement(){
+  const r=l=>PL.tt[l]?PL.c[l]/PL.tt[l]:0;let lvl="A2";
+  if(r("A2")>=0.6&&r("B1")>=0.5)lvl="B1";
+  if(lvl==="B1"&&r("B1")>=0.75&&r("B2")>=0.6)lvl="B2";
+  S.user.niveau=lvl;
+  if(lvl!=="A2")S.mastery.A2=LEVELUP_TH.A2;
+  if(lvl==="B2")S.mastery.B1=LEVELUP_TH.B1;
+  save();PL=null;
+  openModal(`<div class="emo">🎯</div><h2>${t("levelWord")} ${lvl}</h2><p class="muted">${t("pl_done",lvl)}</p><button class="big-cta" onclick="closeModal();renderHeader();show('home')">${t("ob_go")}</button>`);
+}
+
+/* ---------- mistakes review ---------- */
+function startMistakeReview(){
+  const ms=S.mistakes||[];if(!ms.length)return;
+  const types=[...new Set(ms.map(m=>m.type))];
+  SES={plan:types,bi:0,start:Date.now(),correct:0,total:0,items:[],si:0,locked:false,leveledTo:null,theme:null,bonus:true,mistakeSet:new Set(ms.map(m=>m.id))};
+  show("session");runBlock();
+}
+
+/* ---------- record & compare (pronunciation) ---------- */
+let REC=null,recURL=null;
+async function toggleRecord(btn){
+  try{
+    if(REC&&REC.state==="recording"){REC.stop();return;}
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    const chunks=[];REC=new MediaRecorder(stream);
+    REC.ondataavailable=e=>chunks.push(e.data);
+    REC.onstop=()=>{if(recURL)URL.revokeObjectURL(recURL);recURL=URL.createObjectURL(new Blob(chunks));stream.getTracks().forEach(x=>x.stop());const p=document.getElementById("playmine");if(p)p.classList.remove("hidden");if(btn)btn.textContent=t("record");};
+    REC.start();btn.textContent=t("stop_record");
+  }catch(e){alert(t("mic_denied"));}
+}
+function playMine(){if(recURL){try{new Audio(recURL).play();}catch(e){}}}
+
 /* ---------- boot ---------- */
 function boot(){
   mergeI18nEN();applyThemaTags();
   if(!S){onboarding();return;}
+  if(!S.mistakes)S.mistakes=[];
   if(!S.user.lang)S.user.lang="en";
   rolloverXp();advanceLiga();ensureChecklist();weeklyReportIfDue();renderHeader();show("home");
 }
