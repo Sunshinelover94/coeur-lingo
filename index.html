@@ -173,8 +173,7 @@ const LEVELUP_TH={A2:40,B1:60,B2:80,C1:9999};
 const MILESTONES=[10,25,60,100,150,205,300];
 
 /* ---------- i18n: UI strings ---------- */
-let PENDING_LANG="en";
-function L(){return (S&&S.user&&S.user.lang)||PENDING_LANG||"en";}
+function L(){return "en";}
 function t(k,...a){let v=(STR[L()]||STR.en)[k];if(v==null)v=STR.en[k];if(v==null)return k;return typeof v==="function"?v(...a):v;}
 const STR={
  en:{
@@ -250,80 +249,6 @@ const STR={
   mail_badge_subj:(n)=>`🏅 ${n||"She"} earned a badge`,mail_badge_body:(n,b,st)=>`Badge: ${b}. Streak: ${st} days.`,
   mail_redeem_subj:(n,t)=>`💝 ${n||"She"} is redeeming a reward: ${t}`,mail_redeem_body:(n,t,d)=>`${n||"Your partner"} would like to redeem “${t}” (${d}). Over to you ❤️`,
   mail_test_subj:"💞 Cœur·Lingo test",mail_test_body:(n)=>`Test: ${n||"your partner"} set up notifications. You'll get her progress here ❤️`
- },
- fr:{
-  nav_home:"Accueil",nav_liga:"Ligue",nav_reward:"Récompenses",nav_stats:"Progrès",
-  levelWord:"Niveau",nameFallback:"ma belle",langName:"Français",
-  greetSub_done:"Défi du jour terminé — bravo ! Tu peux débloquer tes apps. 🎉",
-  greetSub_todo:"Ton défi du jour (~5 min). 6 blocs variés. Termine-le pour ta série + débloquer tes apps.",
-  cta_start:"▶︎ Commencer le défi du jour",btn_unblock:"🔓 Débloquer mes apps",
-  btn_share:"💌 Montrer mes progrès à mon chéri",btn_bonus:"↺ Refaire une session bonus",
-  stat_streak:"série 🔥",stat_week:"min / sem.",stat_league:"ligue 🏆",
-  btn_blocker:"🛡️ Configurer le blocage des apps (iPhone)",
-  practice_theme:"🎯 Entraîner un thème",pick_theme_title:"Choisis un thème",no_themes:"Du contenu par thème arrive bientôt.",
-  save_progress:"💾 Sauvegarder ma progression",restore_progress:"📂 Restaurer une sauvegarde",import_bad:"Fichier de sauvegarde invalide.",
-  backup_banner:(s)=>`💾 Protège ta série de ${s} jours — fais une sauvegarde.`,backup_btn:"Sauvegarder",
-  pl_title:"Petit test de niveau ?",pl_sub:"~2 minutes — on te place au bon niveau. Ou passe et commence en A2.",pl_start:"Commencer le test",pl_skip:"Passer (commencer en A2)",pl_q:"Test de niveau",pl_done:(l)=>`On démarre au niveau ${l}. Modifiable à tout moment dans les Réglages.`,
-  review_mistakes:(n)=>`🔁 Revoir mes erreurs (${n})`,
-  record:"🎙️ S'enregistrer",stop_record:"⏹ Stop",play_mine:"▶️ M'écouter",mic_denied:"Micro non disponible.",
-  block_n:(a,b)=>`Bloc ${a} / ${b}`,
-  vocab_new:(i,n)=>`🗂️ Nouveau mot ${i}/${n}`,vocab_tap:"Touche pour révéler 👆",listen:"🔊 Écouter",
-  vocab_q:"Tu connaissais ce mot ?",vocab_no:"❌ Pas encore",vocab_yes:"✅ Je savais",
-  ueber_tag:(i,n)=>`⌨️ Traduire ${i}/${n}`,ueber_prompt:"Écris-le en allemand :",ueber_ph:"ta réponse en allemand…",
-  check:"Vérifier",next:"Suivant →",cont:"Continuer →",
-  perfect_is:(s)=>`✅ Parfait : « ${s} »`,answer_is:(s)=>`❌ Réponse : « ${s} »`,
-  luecke_tag:(i,n)=>`✏️ Compléter ${i}/${n}`,build_tag:(i,n)=>`🧩 Construire ${i}/${n}`,
-  hoeren_tag:(i,n)=>`🎧 Écoute ${i}/${n}`,replay:"🔊 Écouter (rejouer)",heard_ok:"✅ Bien entendu !",
-  heard_no:(s)=>`❌ Réécoute : « ${s} »`,
-  konj_tag:(i,n)=>`🔧 Conjugaison ${i}/${n}`,konj_ph:"forme correcte…",
-  paare_tag:"🔗 Associe les paires",paare_hint:"Touche un mot allemand, puis sa traduction.",paare_done:"✅ Toutes les paires trouvées !",
-  dlg_repeat:"À voix haute, répète la phrase 🎙️",dlg_next:"Phrase suivante →",dlg_end:"J'ai répété — terminer →",
-  okFb:(s)=>`✅ ${s}`,noFb:(s)=>`❌ ${s}`,
-  celebr_title:"Défi terminé !",celebr_sub:(st,ac)=>`Série : <b>${st} jours</b> 🔥 · Précision ${ac}% · +20 XP`,
-  level_unlocked:(l)=>`Niveau ${l} débloqué !`,level_sub:"De nouveaux contenus un peu plus difficiles arrivent — en douceur.",
-  coupon_unlocked:"Nouveau bon débloqué !",coupon_notified:"📧 Ton chéri vient d'être prévenu",
-  badges_line:(s)=>`Badges : ${s}`,continueBtn:"Continuer",show_partner:"💌 Montrer à mon chéri",
-  unblock_title:"Débloquer tes apps",unblock_body:"On lance le raccourci « CoeurLingoFait » qui autorise tes apps pour aujourd'hui.",
-  unblock_run:"Lancer le raccourci",close:"Fermer",unblock_hint:"Pas encore configuré ? Va dans 🛡️ Blocage des apps.",
-  shared_title:"Envoyé !",shared_body:"Ton chéri vient de voir ton effort du jour ❤️",great:"Super",
-  share_setup_title:"Presque !",share_setup_body:"Ajoute l'e-mail de ton chéri dans ⚙️ Réglages pour qu'il reçoive tes progrès.",configure:"Configurer",
-  liga_title:"🏆 Ligue de la semaine",liga_sub:"Reset chaque lundi. Reste devant en t'entraînant chaque jour !",
-  liga_tip:"💡 Les concurrents progressent seuls chaque jour. Si tu sautes un jour, ils te dépassent — garde le rythme !",you:"(toi)",
-  stats_week:"📈 Cette semaine",stats_30:"🗓️ 30 derniers jours",
-  month_total:(m,d)=>`Total du mois : <b>${m} min</b> · ${d} jours actifs`,
-  stats_sum:"🌟 Bilan",s_curstreak:"série actuelle",s_record:"record 🔥",s_words:"mots vus",s_level:"niveau",unit_min:"en min",
-  rewards_title:"🎟️ Tes bons à échanger",rewards_sub:"Chaque palier de série débloque une activité avec ton chéri. Il est prévenu par e-mail à chaque palier !",
-  days:"jours",redeemed:"✅ échangé",unlocked_st:"🎁 débloqué",left_days:(n)=>`🔒 plus que ${n} jours`,redeem:"Échanger",
-  badges_title:"🏅 Badges",redeem_sent:"Bon envoyé !",redeem_sent_b:(x)=>`Ton chéri a reçu ta demande : <b>${x}</b>`,
-  settings_title:"⚙️ Réglages",set_name:"Ton prénom",set_lang:"Langue",set_email:"E-mail de ton chéri",
-  set_key:"Clé Web3Forms (access key)",set_key_hint:"Gratuit sur web3forms.com → crée une clé liée à l'e-mail de ton chéri (voir README).",
-  set_level:"Niveau (ajuste si besoin)",save:"Enregistrer",test_mail:"📧 Envoyer un e-mail de test",sim_day:"🧪 Simuler un jour (debug)",resetBtn:"♻️ Réinitialiser",
-  saved:"Enregistré",ok:"OK",need_first:"Renseigne l'e-mail et la clé Web3Forms d'abord.",test_sent:"Test envoyé",test_sent_b:"Vérifie la boîte mail de ton chéri.",
-  sim_title:"Jour simulé",sim_body:"Fais ta session du jour pour voir la série grimper.",reset_confirm:"Tout réinitialiser ?",
-  ob_title:"Bienvenue sur Cœur·Lingo",ob_sub:"5 minutes par jour pour parler allemand — et montrer à ton chéri ton effort.",
-  ob_name:"Ton prénom",ob_email:"E-mail de ton chéri (optionnel)",ob_lang:"Langue",ob_go:"C'est parti 🚀",
-  back:"← Retour",
-  blk_title:"🛡️ Bloquer Instagram, WhatsApp & co. (iPhone)",
-  blk_intro:"Sans app native, on utilise les <b>Raccourcis iOS</b> : tes apps de distraction te renvoient ici tant que le défi n'est pas fait. Une fois terminé, le bouton « Débloquer » les réautorise pour la journée.",
-  blk1_h:"① Raccourci « CoeurLingoFait »",blk1_1:"App <b>Raccourcis</b> → <b>+</b> → nom : <code>CoeurLingoFait</code>",
-  blk1_2:"Action <b>« Texte »</b> = date du jour, puis <b>« Enregistrer le fichier »</b> dans iCloud Drive sous <code>coeurlingo.txt</code> (écraser : oui).",
-  blk1_3:"C'est ce raccourci que lance le bouton <b>🔓 Débloquer</b>.",
-  blk2_h:"② Raccourci « Portier »",blk2_1:"<code>Portier</code> : <b>« Obtenir le fichier »</b> <code>coeurlingo.txt</code> (autoriser l'absence d'erreur).",
-  blk2_2:"<b>Si</b> le texte = la date du jour → ne rien faire. <b>Sinon</b> → <b>« Ouvrir l'app »</b> → Cœur·Lingo.",
-  blk3_h:"③ Automatisations (une par app)",blk3_1:"Onglet <b>Automatisation</b> → <b>+</b> → <b>App</b> → <b>Instagram</b> → <b>Est ouverte</b>.",
-  blk3_2:"Action <b>« Exécuter le raccourci »</b> → <code>Portier</code>. Désactive <b>« Demander avant d'exécuter »</b>.",
-  blk3_3:"Répète pour <b>WhatsApp, YouTube, Snapchat, TikTok</b>…",
-  blk_hard_h:"🔒 Option « blocage dur »",blk_hard:"Réglages → <b>Temps d'écran</b> → limite 1 min sur les réseaux + un <b>code Temps d'écran que ton chéri choisit</b>. Là c'est vraiment verrouillé — mais le déblocage redevient manuel.",
-  blk_foot:"⚠️ Méthode douce : contournable. Le blocage 100 % infalsifiable nécessite une app native (phase 2).",
-  mail_share_subj:(n)=>`💪 ${n||"Elle"} a fait sa session du jour`,
-  mail_share_body:(n,st,m,r)=>`${n||"Ta chérie"} vient de terminer son défi !\nSérie : ${st} jours 🔥 · niveau ${gLevel()} · ${m} min cette semaine · ligue ${r}/6.`,
-  mail_week_subj:(n,m)=>`💞 ${n||"Elle"} a appris ${m} min cette semaine`,
-  mail_week_body:(n,se,m,st,lv,w,rk)=>`Rapport hebdo de ${n||"ta chérie"} 💞\n\n• Sessions : ${se}\n• Minutes : ${m}\n• Série : ${st} jours 🔥\n• Niveau : ${lv}\n• Mots vus : ${w}\n• Ligue : ${rk}/6\n\nElle s'accroche — un petit mot l'encouragerait ❤️`,
-  mail_level_subj:(n,l)=>`🎓 ${n||"Elle"} a atteint le niveau ${l}`,mail_level_body:(n,l)=>`${n||"Ta chérie"} vient de passer au niveau ${l} en allemand ! 🎉`,
-  mail_coupon_subj:(n,t)=>`🎟️ ${n||"Elle"} a débloqué un bon : ${t}`,mail_coupon_body:(n,m,t,d)=>`${n||"Ta chérie"} a atteint ${m} jours de série 🔥\n\nBon à honorer : ${t} (${d}).\n\nC'est le moment de la récompenser ❤️`,
-  mail_badge_subj:(n)=>`🏅 ${n||"Elle"} a gagné un badge`,mail_badge_body:(n,b,st)=>`Badge : ${b}. Série : ${st} jours.`,
-  mail_redeem_subj:(n,t)=>`💝 ${n||"Elle"} échange son bon : ${t}`,mail_redeem_body:(n,t,d)=>`${n||"Ta chérie"} souhaite échanger « ${t} » (${d}). À toi de jouer ❤️`,
-  mail_test_subj:"💞 Test Cœur·Lingo",mail_test_body:(n)=>`Test : ${n||"ta chérie"} a configuré les notifications. Tu recevras ses progrès ici ❤️`
  }
 };
 
@@ -386,17 +311,17 @@ function openThemePicker(){
 }
 
 /* ---------- content accessors (EN default, FR fallback / vice versa) ---------- */
-function gMean(it){return L()==="fr"?it.fr:(it.en||it.fr);}
-function gEx(it){return L()==="fr"?it.exFr:(it.exEn||it.exFr);}
-function gExpl(it){return L()==="fr"?it.fr:(it.en||it.fr);}            // luecke/satzbau prompt-explanation
-function gUeber(it){return L()==="fr"?it.fr:(it.en||it.fr);}           // translate source sentence
-function gErkl(g){return L()==="fr"?g.erkl:(g.erklEn||g.erkl);}
-function gGramEx(q){return L()==="fr"?q.explainFr:(q.explainEn||q.explainFr);}
-function gHoerQ(it){return L()==="fr"?it.q:(it.qEn||it.q);}
-function gHoerOpts(it){return L()==="fr"?it.options:(it.optionsEn||it.options);}
-function gHint(it){return L()==="fr"?it.hintFr:(it.hintEn||it.hintFr);}
-function gPairTrans(it,i){return L()==="fr"?it.pairs[i][1]:((it.en&&it.en[i]!=null)?it.en[i]:it.pairs[i][1]);}
-function gDlgLine(it,i){return L()==="fr"?it.zeilen[i].fr:((it.en&&it.en[i]!=null)?it.en[i]:it.zeilen[i].fr);}
+function gMean(it){return it.en||it.fr;}
+function gEx(it){return it.exEn||it.exFr;}
+function gExpl(it){return it.en||it.fr;}            // luecke/satzbau prompt-explanation
+function gUeber(it){return it.en||it.fr;}           // translate source sentence
+function gErkl(g){return g.erklEn||g.erkl;}
+function gGramEx(q){return q.explainEn||q.explainFr;}
+function gHoerQ(it){return it.qEn||it.q;}
+function gHoerOpts(it){return it.optionsEn||it.options;}
+function gHint(it){return it.hintEn||it.hintFr;}
+function gPairTrans(it,i){return (it.en&&it.en[i]!=null)?it.en[i]:it.pairs[i][1];}
+function gDlgLine(it,i){return (it.en&&it.en[i]!=null)?it.en[i]:it.zeilen[i].fr;}
 
 /* ---------- dates ---------- */
 const pad=n=>String(n).padStart(2,"0");
@@ -415,7 +340,7 @@ function load(){try{return JSON.parse(localStorage.getItem(KEY))||null}catch(e){
 function save(){localStorage.setItem(KEY,JSON.stringify(S));}
 function freshState(name,email,lang){
   return{
-    user:{name:name||"",niveau:"A2",lang:lang||"en",freundEmail:email||"",w3key:""},
+    user:{name:name||"",niveau:"A2",lang:"en",freundEmail:email||"",w3key:"",voiceId:"hpp4J3VqNfWAUOO0d1Us"},
     streak:{aktuell:0,längste:0,letzterTag:"",freezes:2},
     xp:{gesamt:0,heute:0,heuteDatum:todayStr()},
     mastery:{A2:0,B1:0,B2:0,C1:0},
@@ -588,8 +513,7 @@ function renderHeader(){
   document.getElementById("hLvlProg").style.width=(curIdx()<3?Math.min(100,S.mastery[lvl]/th*100):100)+"%";
 }
 function todaysCompliment(){
-  const fr=INHALTE.komplimente,en=INHALTE.komplimenteEn||fr;
-  const list=L()==="fr"?fr:en;const idx=Math.abs(dayIndex())%list.length;return list[idx]||fr[idx];
+  const list=INHALTE.komplimenteEn||INHALTE.komplimente;const idx=Math.abs(dayIndex())%list.length;return list[idx];
 }
 
 /* ---------- HOME ---------- */
@@ -647,7 +571,7 @@ function renderVocab(){
        <div class="face"><div><div class="muted sm">${t("langName")}</div><div class="big">${esc(gMean(it))}</div><div class="sm muted" style="margin-top:8px">${t("vocab_tap")}</div></div></div>
        <div class="face back"><div><div class="muted sm">Deutsch <span class="lvltag">${it.lvl}</span></div><div class="big">${esc(it.de)}</div><div class="sm" style="margin-top:8px">${esc(it.ex)}</div></div></div>
      </div></div>
-     <div class="center"><button class="spk" onclick="event.stopPropagation();speak(${q(it.de)})">${t("listen")}</button></div></div>
+     <div class="center"><button class="spk" onclick="event.stopPropagation();playAudio(${q('w_'+it.id)},${q(it.de)})">${t("listen")}</button></div></div>
    <p class="sm muted center">${t("vocab_q")}</p>
    <div class="row"><button class="btn ghost" onclick="vocabRate(false)">${t("vocab_no")}</button><button class="btn" onclick="vocabRate(true)">${t("vocab_yes")}</button></div>`;
 }
@@ -713,7 +637,7 @@ function checkSatz(){
   SES.locked=true;const ok=got===it.loesung;record(ok,it.lvl,it.id,"satzbau");
   document.getElementById("cb").classList.add("hidden");
   document.getElementById("fb").innerHTML=(ok?`<div class="flash ok">${t("perfect_is",esc(it.loesung))}</div>`:`<div class="flash no">${t("answer_is",esc(it.loesung))}</div>`)
-    +`<div class="center" style="margin:10px 0"><button class="spk" onclick="speak(${q(it.loesung)})">${t("listen")}</button></div>`
+    +`<div class="center" style="margin:10px 0"><button class="spk" onclick="playAudio(${q('s_'+it.id)},${q(it.loesung)})">${t("listen")}</button></div>`
     +`<button class="btn block" onclick="satzNext()">${SES.si<SES.items.length-1?t("next"):t("cont")}</button>`;
   if(ok)addXp(7);
 }
@@ -724,11 +648,11 @@ function renderDialog(){
   const z=SES.items[SES.si];recURL=null;
   vw().innerHTML=head(`🗣️ ${esc(SES.dlg.titel)} <span class="lvltag">${SES.dlg.lvl}</span>`)+`
      <div class="qtext">${esc(z.de)}</div><p class="muted">${esc(gDlgLine(SES.dlg,SES.si))}</p>
-     <button class="bigspk" onclick="speak(${q(z.de)})">${t("listen")}</button>
+     <button class="bigspk" onclick="playAudio(${q('d_'+SES.dlg.id+'_'+SES.si)},${q(z.de)})">${t("listen")}</button>
      <div class="row" style="margin-top:10px"><button class="btn ghost" onclick="toggleRecord(this)">${t("record")}</button><button id="playmine" class="btn ghost hidden" onclick="playMine()">${t("play_mine")}</button></div>
      <p class="sm muted center" style="margin:14px 0 0">${t("dlg_repeat")}</p></div>
    <button class="btn block" onclick="dlgNext()">${SES.si<SES.items.length-1?t("dlg_next"):t("dlg_end")}</button>`;
-  setTimeout(()=>speak(z.de),350);
+  setTimeout(()=>playAudio(`d_${SES.dlg.id}_${SES.si}`,z.de),350);
 }
 function dlgNext(){if(SES.si<SES.items.length-1){SES.si++;renderDialog();}else{addXp(10);blockDone();}}
 
@@ -736,10 +660,10 @@ function bHoeren(){SES.items=pickLevel(INHALTE.hoerverstehen,3);if(!SES.items.le
 function renderHoeren(){
   const it=SES.items[SES.si];const opts=gHoerOpts(it);
   vw().innerHTML=head(t("hoeren_tag",SES.si+1,SES.items.length)+` <span class="lvltag">${it.lvl}</span>`)+`
-     <button class="bigspk" onclick="speak(${q(it.audio)})">${t("replay")}</button>
+     <button class="bigspk" onclick="playAudio(${q('h_'+it.id)},${q(it.audio)})">${t("replay")}</button>
      <p class="qtext" style="margin-top:16px">${esc(gHoerQ(it))}</p>
      ${opts.map((o,i)=>`<button class="opt" onclick="answerHoeren(${i})">${esc(o)}</button>`).join("")}<div id="fb"></div></div>`;
-  setTimeout(()=>speak(it.audio),400);
+  setTimeout(()=>playAudio(`h_${it.id}`,it.audio),400);
 }
 function answerHoeren(i){
   if(SES.locked)return;SES.locked=true;const it=SES.items[SES.si];const ok=i===it.answer;record(ok,it.lvl,it.id,"hoeren");
@@ -800,6 +724,13 @@ let deVoice=null;
 function loadVoices(){const v=speechSynthesis.getVoices();deVoice=v.find(x=>x.lang&&x.lang.toLowerCase().startsWith("de"))||null;}
 if("speechSynthesis"in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices;}
 function speak(tx){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(tx);u.lang="de-DE";u.rate=.9;if(deVoice)u.voice=deVoice;speechSynthesis.speak(u);}catch(e){}}
+function playAudio(id,fallbackText){
+  try{
+    const el=new Audio(`audio/${id}.mp3`);let fell=false;
+    const fb=()=>{if(fell)return;fell=true;speak(fallbackText);};
+    el.addEventListener("error",fb);el.play().catch(fb);
+  }catch(e){speak(fallbackText);}
+}
 
 /* ---------- celebration ---------- */
 function celebrate(nb,nc,lvl){
@@ -878,7 +809,6 @@ function redeem(m){const c=S.coupons.find(x=>x.meilenstein===m);if(!c)return;c.s
 function renderSettings(){
   document.getElementById("view-settings").innerHTML=`<div class="card"><h2>${t("settings_title")}</h2>
      <label>${t("set_name")}</label><input id="setName" value="${esc(S.user.name)}"/>
-     <label>${t("set_lang")}</label><select id="setLang"><option value="en" ${S.user.lang==='en'?'selected':''}>English</option><option value="fr" ${S.user.lang==='fr'?'selected':''}>Français</option></select>
      <label>${t("set_email")}</label><input id="setEmail" type="email" value="${esc(S.user.freundEmail)}"/>
      <label>${t("set_key")}</label><input id="setKey" value="${esc(S.user.w3key)}" placeholder="..."/>
      <p class="sm muted">${t("set_key_hint")}</p>
@@ -890,7 +820,7 @@ function renderSettings(){
      <button class="btn ghost block" style="margin-top:10px" onclick="simDay()">${t("sim_day")}</button>
      <button class="btn ghost block" style="margin-top:10px;color:var(--bad)" onclick="resetAll()">${t("resetBtn")}</button></div>`;
 }
-function saveSettings(){S.user.name=val("setName").trim();S.user.lang=val("setLang");S.user.freundEmail=val("setEmail").trim();S.user.w3key=val("setKey").trim();S.user.niveau=val("setNiv");save();renderHeader();
+function saveSettings(){S.user.name=val("setName").trim();S.user.freundEmail=val("setEmail").trim();S.user.w3key=val("setKey").trim();S.user.niveau=val("setNiv");save();renderHeader();
   openModal(`<div class="emo">✅</div><h2>${t("saved")}</h2><button class="btn block" onclick="closeModal();show('home')">${t("ok")}</button>`);}
 async function testMail(){if(!val("setEmail")||!val("setKey")){alert(t("need_first"));return;}S.user.freundEmail=val("setEmail").trim();S.user.w3key=val("setKey").trim();save();
   await sendMail(t("mail_test_subj"),t("mail_test_body",S.user.name),null);
@@ -917,16 +847,14 @@ function renderBlocker(){
 }
 
 /* ---------- onboarding ---------- */
-function obSetLang(l){PENDING_LANG=l;onboarding();}
 function onboarding(){
   openModal(`<div class="emo">💞</div><h2>${t("ob_title")}</h2><p class="muted">${t("ob_sub")}</p>
     <div style="text-align:left;margin-top:16px">
-      <label>${t("ob_lang")}</label><select id="obLang" onchange="obSetLang(this.value)"><option value="en" ${L()==='en'?'selected':''}>English</option><option value="fr" ${L()==='fr'?'selected':''}>Français</option></select>
-      <label>${t("ob_name")}</label><input id="obName" placeholder="${L()==='fr'?'ex. Camille':'e.g. Camille'}"/>
+      <label>${t("ob_name")}</label><input id="obName" placeholder="e.g. Camille"/>
       <label>${t("ob_email")}</label><input id="obEmail" type="email" placeholder="..."/></div>
     <button class="big-cta" style="margin-top:8px" onclick="finishOnboarding()">${t("ob_go")}</button>`);
 }
-function finishOnboarding(){const lang=val("obLang")||PENDING_LANG;S=freshState(val("obName").trim(),val("obEmail").trim(),lang);save();closeModal();renderHeader();offerPlacement();}
+function finishOnboarding(){S=freshState(val("obName").trim(),val("obEmail").trim());save();closeModal();renderHeader();offerPlacement();}
 
 /* ---------- utils ---------- */
 function val(id){const e=document.getElementById(id);return e?e.value:"";}

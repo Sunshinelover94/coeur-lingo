@@ -8,3 +8,5 @@ build-dump-untagged.js
 build-tags.js
 qa-content.js
 data/_dump/
+tools/_audio_manifest.json
+audio/
