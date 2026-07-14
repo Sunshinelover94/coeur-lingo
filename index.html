@@ -89,10 +89,19 @@ main{padding:16px}
 .statgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .stat{background:#fff3f6;border-radius:14px;padding:12px;text-align:center}
 .stat b{font-size:24px;color:var(--plum);display:block}
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .badge{background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:10px 6px;text-align:center;font-size:12px}
 .badge .ic{font-size:26px;filter:grayscale(1);opacity:.35}
 .badge.on .ic{filter:none;opacity:1}.badge.on{border-color:var(--gold);background:#fffaf0}
+/* Badge-Fortschrittsreihen (S9) */
+.badgerow{display:flex;gap:11px;align-items:center;padding:9px 2px;border-bottom:1px solid var(--line)}
+.badgerow:last-child{border-bottom:none}
+.badgerow .bicon{font-size:24px;width:34px;text-align:center;flex:none;filter:grayscale(1);opacity:.4}
+.badgerow.on .bicon{filter:none;opacity:1}
+.badgerow .bmeta{flex:1;min-width:0}
+.badgerow .bname{font-weight:700;font-size:14px;display:flex;justify-content:space-between;gap:8px}
+.badgerow .btier{font-size:11px;font-weight:800;color:var(--gold);background:#fffaf0;border-radius:6px;padding:1px 7px;flex:none}
+.bbar{height:7px;background:var(--line);border-radius:999px;overflow:hidden;margin:5px 0 3px}
+.bbar>i{display:block;height:100%;background:linear-gradient(90deg,var(--coral),var(--gold));border-radius:999px;transition:width .5s}
 .coupon{display:flex;gap:12px;align-items:center;border:1.5px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px}
 .coupon.on{border-color:var(--gold);background:linear-gradient(135deg,#fffaf0,#fff)}
 .coupon.locked{opacity:.55}
@@ -120,6 +129,28 @@ code{background:#f3e6ec;padding:2px 6px;border-radius:6px;font-size:13px;color:v
 .pairbtn.ok{border-color:var(--good);background:#e7f7ef;opacity:.6}
 .pairbtn.err{border-color:var(--bad);background:#fdeaee}
 .lvltag{font-size:11px;font-weight:800;color:#9be7c4;background:rgba(0,0,0,.04);border-radius:6px;padding:1px 6px}
+/* Easter-Egg-Streaks (S10) */
+.eggcard{border:1.5px solid var(--gold)!important;background:linear-gradient(135deg,#fffaf0,#fff3f6)!important;text-align:center}
+.owlcard{display:flex;align-items:center;gap:12px;cursor:pointer;border:1.5px solid var(--gold);background:#fffaf0}
+.owl{font-size:30px;animation:owlbob 2.4s ease-in-out infinite}
+@keyframes owlbob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-5px) rotate(4deg)}}
+body.goldday header{background:linear-gradient(135deg,var(--gold),#d99414)}
+body.goldday .brand{color:#5a3a00}
+/* Wort-Antippen (S8) */
+span.w{border-bottom:1.5px dotted var(--coral);cursor:pointer}
+#wordpopup{position:fixed;left:0;right:0;bottom:0;z-index:95;padding:10px 14px calc(14px + env(safe-area-inset-bottom));display:flex;justify-content:center;pointer-events:none}
+#wordpopup .wpcard{pointer-events:auto}
+.wpcard{position:relative;width:100%;max-width:520px;background:var(--card);border:1.5px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:16px 44px 16px 16px;animation:fade .2s ease}
+.wpclose{position:absolute;top:10px;right:10px;background:#fff3f6;border:1.5px solid var(--line);border-radius:8px;width:28px;height:28px;font-size:14px;color:var(--plum)}
+.wpword{font-size:19px;font-weight:800;color:var(--plum);display:flex;align-items:center;gap:8px}
+.wptrans{font-size:15px;color:var(--good);font-weight:600;margin-top:4px}
+.wpspk{background:var(--gold);color:#5a3a00;border-radius:999px;padding:4px 11px;font-weight:700;font-size:13px}
+/* Feedback-Button (S11) */
+#feedbackoverlay{position:fixed;inset:0;z-index:96;background:rgba(44,26,36,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.fbcard{position:relative;width:100%;max-width:460px;max-height:88vh;overflow:auto;background:var(--card);border-radius:22px;box-shadow:var(--shadow);padding:22px 40px 20px 22px;text-align:left;animation:fade .2s ease}
+.fbclose{position:absolute;top:14px;right:14px;background:#fff3f6;border:1.5px solid var(--line);border-radius:8px;width:28px;height:28px;font-size:14px;color:var(--plum)}
+.fbshot{width:100%;border-radius:12px;border:1.5px solid var(--line);margin:12px 0 8px}
+.fbcard textarea{width:100%;padding:13px;border:1.5px solid var(--line);border-radius:12px;font-size:15px;font-family:inherit;resize:vertical;margin-top:4px}
 </style>
 </head>
 <body>
@@ -129,6 +160,7 @@ code{background:#f3e6ec;padding:2px 6px;border-radius:6px;font-size:13px;color:v
     <div class="brand">💞 Cœur·Lingo</div>
     <div style="display:flex;gap:8px;align-items:center">
       <div class="streakpill">🔥 <span id="hStreak">0</span></div>
+      <button class="iconbtn" onclick="openFeedback()" title="Report a bug or send feedback">🐞</button>
       <button class="iconbtn" onclick="show('settings')">⚙️</button>
     </div>
   </div>
@@ -156,12 +188,16 @@ code{background:#f3e6ec;padding:2px 6px;border-radius:6px;font-size:13px;color:v
 
 <canvas id="confetti" class="hidden"></canvas>
 <div id="modal-root"></div>
+<div id="wordpopup" class="hidden"></div>
+<div id="feedbackoverlay" class="hidden"></div>
 
 <script src="data/inhalte.js"></script>
 <script src="data/inhalte-b2c1.js"></script>
 <script src="data/i18n-en.js"></script>
 <script src="data/inhalte-themen.js"></script>
+<script src="data/inhalte-vokabeln.js"></script>
 <script src="data/thema-tags.js"></script>
+<script src="data/dict-de-en.js"></script>
 <script>
 /* =====================================================================
    Cœur·Lingo — Engine v2 + i18n (EN principal, FR optionnel)
@@ -194,6 +230,13 @@ const STR={
   block_n:(a,b)=>`Block ${a} / ${b}`,
   vocab_new:(i,n)=>`🗂️ New word ${i}/${n}`,vocab_tap:"Tap to reveal 👆",listen:"🔊 Listen",
   vocab_q:"Did you know this word?",vocab_no:"❌ Not yet",vocab_yes:"✅ I knew it",
+  remember_word:"Remember this word",word_saved:"Saved to your words",badge_maxed:"Max level! 🎉",
+  egg_unlocked:"Hidden reward",egg_teaser:(d)=>`A secret surprise in ${d} day${d>1?"s":""}!`,egg_teaser_sub:"Keep your streak alive to unlock it 🔥",
+  owl_tap:"Tap your owl for a little boost 💛",owl_title:"Your owl says…",
+  fb_title:"Report a bug or send feedback 🐞",fb_noshot:"(screenshot unavailable)",fb_ph:"Describe the bug or feedback…",
+  fb_send:"Send",fb_cancel:"Cancel",fb_need_text:"Please describe the issue first.",
+  fb_sent:"Thank you! 🙏",fb_sent_b:"Your feedback was sent.",
+  fb_queued:"Saved for later",fb_queued_b:"No connection right now — we'll send it once you're back online.",
   ueber_tag:(i,n)=>`⌨️ Translate ${i}/${n}`,ueber_prompt:"Write it in German:",ueber_ph:"your answer in German…",
   check:"Check",next:"Next →",cont:"Continue →",
   perfect_is:(s)=>`✅ Perfect: « ${s} »`,answer_is:(s)=>`❌ Answer: « ${s} »`,
@@ -264,18 +307,67 @@ const COUPONS={
 };
 function cT(m){return COUPONS[m].t[L()]||COUPONS[m].t.en;}
 function cD(m){return COUPONS[m].d[L()]||COUPONS[m].d.en;}
+/* Easter-Egg-Streaks (S10): 5 versteckte Belohnungen an krummen Streak-Tagen, Teaser 3 Tage vorher,
+   Mix In-App (gold/owl) + echte Mini-Belohnungen (Auto-Mail an den Partner, Dedup via mailSent). */
+const EASTER_EGGS=[
+  {day:7, icon:"🎨", effect:"gold", title:"Secret golden theme!",
+   desc:"For today your whole app shines in gold — because so do you ✨"},
+  {day:21, icon:"☕", mail:true, title:"A surprise treat 💛",
+   desc:"A hidden reward: your partner brings you a coffee or your favourite snack.",
+   msubj:n=>`☕ ${n||"She"} reached a 21-day streak — surprise treat time!`,
+   mbody:n=>`${n||"Your partner"} kept a 21-day streak on Cœur·Lingo 🔥\n\nHidden reward unlocked: surprise her with a coffee or her favourite snack ☕💛`},
+  {day:42, icon:"🦉", effect:"owl", title:"A little owl joins you!",
+   desc:"Your streak owl is here to cheer you on — tap it on the home screen anytime."},
+  {day:63, icon:"🌹", mail:true, title:"A little something 🌹",
+   desc:"A hidden reward: a small flower or your favourite sweet from your partner.",
+   msubj:n=>`🌹 ${n||"She"} reached a 63-day streak — little surprise due!`,
+   mbody:n=>`${n||"Your partner"} is on a 63-day streak on Cœur·Lingo 🔥\n\nHidden reward unlocked: a small flower or her favourite sweet would make her day 🌹`},
+  {day:88, icon:"🎬", mail:true, title:"Movie & dinner night!",
+   desc:"A hidden reward: a cosy evening — film + favourite food, your choice.",
+   msubj:n=>`🎬 ${n||"She"} reached an 88-day streak — movie night unlocked!`,
+   mbody:n=>`${n||"Your partner"} hit an 88-day streak on Cœur·Lingo 🔥\n\nHidden reward unlocked: treat her to a movie-and-dinner night — her pick 🎬🍽️`}
+];
 const NPC_SEED=[
   {name:"Camille",av:"🥖",rate:42},{name:"Tomas",av:"🦊",rate:55},
   {name:"Sophie",av:"🌸",rate:34},{name:"Lukas",av:"🐻",rate:48},{name:"Inès",av:"🦉",rate:60}
 ];
-const BADGES=[
-  {id:"first",ic:"🌟",t:{en:"First step",fr:"Premier pas"}},{id:"s3",ic:"🔥",t:{en:"3 days",fr:"3 jours"}},
-  {id:"s7",ic:"⚡",t:{en:"7 days",fr:"7 jours"}},{id:"s30",ic:"💎",t:{en:"30 days",fr:"30 jours"}},
-  {id:"w50",ic:"📚",t:{en:"50 words",fr:"50 mots"}},{id:"w100",ic:"🧠",t:{en:"100 words",fr:"100 mots"}},
-  {id:"perfect",ic:"🎯",t:{en:"Flawless",fr:"Sans faute"}},{id:"beatall",ic:"👑",t:{en:"1st in league",fr:"1ʳᵉ de la ligue"}},
-  {id:"b1",ic:"🚀",t:{en:"Level B1",fr:"Niveau B1"}},{id:"b2",ic:"🏔️",t:{en:"Level B2",fr:"Niveau B2"}},{id:"c1",ic:"🦅",t:{en:"Level C1",fr:"Niveau C1"}}
+/* Datengetriebener Badge-Katalog (S9): je Kategorie ein Getter + Schwellen → Badge-ID `cat_i`, Tier i+1.
+   ~115 gestufte Badges + 4 Meilenstein-Badges. Counter in S.counters via bumpCounter(). */
+const BADGE_CATALOG=[
+  {cat:"sessions", icon:"🎯", name:"Sessions",             get:()=>S.sessions.length,                   th:[1,3,7,14,30,50,75,100,150,205,300]},
+  {cat:"streak",   icon:"🔥", name:"Longest streak",        get:()=>S.streak.längste||0,                 th:[3,7,14,21,30,45,60,90,120,180,270,365]},
+  {cat:"perfect",  icon:"💯", name:"Flawless sessions",     get:()=>S.counters.perfectSessions||0,       th:[1,5,15,40,75,150]},
+  {cat:"xp",       icon:"💎", name:"XP earned",             get:()=>S.xp.gesamt,                         th:[100,500,1000,2500,5000,10000,25000,50000,100000]},
+  {cat:"words",    icon:"📚", name:"Words encountered",     get:()=>S.wordsSeen,                         th:[10,25,50,100,200,350,500,750,1000]},
+  {cat:"lookups",  icon:"🔍", name:"Words tapped",          get:()=>S.counters.lookups||0,               th:[10,50,150,400,1000]},
+  {cat:"starred",  icon:"⭐", name:"Words saved",           get:()=>Object.keys(S.customWords||{}).length, th:[5,25,75,150,300]},
+  {cat:"vocab",    icon:"🗂️", name:"Flashcards reviewed",   get:()=>S.counters.vocab||0,                 th:[25,100,250,500,1000]},
+  {cat:"uebersetzen",icon:"⌨️", name:"Translations typed",  get:()=>S.counters.uebersetzen||0,           th:[10,50,150,400,1000]},
+  {cat:"satzbau",  icon:"🧩", name:"Sentences built",       get:()=>S.counters.satzbau||0,               th:[10,50,150,400,1000]},
+  {cat:"luecke",   icon:"✏️", name:"Gaps & quizzes",        get:()=>S.counters.luecke||0,                th:[10,50,150,400,1000]},
+  {cat:"dialog",   icon:"🗣️", name:"Dialogue lines",        get:()=>S.counters.dialog||0,                th:[10,25,50,100,250,500]},
+  {cat:"hoeren",   icon:"🎧", name:"Listening tasks",       get:()=>S.counters.hoeren||0,                th:[10,25,50,100,250,500]},
+  {cat:"konjugation",icon:"🔧", name:"Conjugations drilled",get:()=>S.counters.konjugation||0,           th:[10,50,150,400]},
+  {cat:"paare",    icon:"🔗", name:"Pairs matched",         get:()=>S.counters.paare||0,                 th:[10,50,150,400]},
+  {cat:"coupons",  icon:"🎟️", name:"Rewards earned",        get:()=>S.coupons.length,                    th:[1,3,5,7]},
+  {cat:"themed",   icon:"🎨", name:"Theme sessions",        get:()=>S.counters.themedSessions||0,        th:[1,5,15,40]},
+  {cat:"league",   icon:"👑", name:"League 1st place",       get:()=>S.counters.leagueWins||0,            th:[1,5,20]},
+  {cat:"weekend",  icon:"🛋️", name:"Weekend sessions",      get:()=>S.counters.weekendSessions||0,       th:[2,8,20,50]},
+  {cat:"early",    icon:"🌅", name:"Early-bird sessions",   get:()=>S.counters.earlySessions||0,         th:[1,10,30]},
+  {cat:"night",    icon:"🦉", name:"Night-owl sessions",    get:()=>S.counters.lateSessions||0,          th:[1,10,30]}
 ];
-function bT(b){return b.t[L()]||b.t.en;}
+/* Einmalige Meilenstein-Badges (single tier). */
+const BADGE_SPECIAL=[
+  {id:"first",icon:"🌟",name:"First step",       when:()=>S.sessions.length>=1},
+  {id:"b1",   icon:"🚀",name:"Level B1 reached",  when:()=>levelIdx(S.user.niveau)>=1},
+  {id:"b2",   icon:"🏔️",name:"Level B2 reached",  when:()=>levelIdx(S.user.niveau)>=2},
+  {id:"c1",   icon:"🦅",name:"Level C1 reached",  when:()=>levelIdx(S.user.niveau)>=3}
+];
+function badgeMeta(id){
+  for(const c of BADGE_CATALOG){for(let i=0;i<c.th.length;i++)if(c.cat+"_"+i===id)return{ic:c.icon,name:c.name+" "+c.th[i]};}
+  const s=BADGE_SPECIAL.find(x=>x.id===id);return s?{ic:s.icon,name:s.name}:{ic:"🏅",name:id};
+}
+function badgeTier(c){let t=0;for(let i=0;i<c.th.length;i++)if(hasBadge(c.cat+"_"+i))t=i+1;return t;}
 const TYPES={
   vocab:{icon:"🗂️",lbl:{en:"Vocabulary",fr:"Vocabulaire"}}, uebersetzen:{icon:"⌨️",lbl:{en:"Translate (type)",fr:"Traduire (écrire)"}},
   luecke:{icon:"✏️",lbl:{en:"Fill in the blank",fr:"Compléter"}}, satzbau:{icon:"🧩",lbl:{en:"Build sentences",fr:"Construire des phrases"}},
@@ -348,7 +440,7 @@ function freshState(name,email,lang){
     sessions:[], badges:[], coupons:[], mistakes:[], backedUp:"",
     liga:{week:weekKey(todayStr()),meineXpWoche:0,lastTag:todayStr(),
       npcs:NPC_SEED.map(n=>({...n,xpWoche:Math.round(rnd(0,n.rate))}))},
-    checkliste:null, mailSent:{}
+    checkliste:null, mailSent:{}, customWords:{}, wordCache:{}, counters:{}, eggs:{revealed:{},goldDate:"",owl:false}
   };
 }
 function curIdx(){return levelIdx(S.user.niveau);}
@@ -396,6 +488,7 @@ function srsUpdate(id,correct){
 function isDue(id){const c=S.srs[id];return c&&c.due<=dayIndex();}
 function record(correct,lvl,id,type){
   SES.total++;if(correct)SES.correct++;
+  if(type)bumpCounter(type); // per-type card counters (uebersetzen/luecke/satzbau/hoeren/konjugation)
   S.recent.push(correct?1:0);if(S.recent.length>40)S.recent.shift();
   if(correct){const Lv=lvl||S.user.niveau;if(S.mastery[Lv]!=null)S.mastery[Lv]++;}
   if(id&&type){correct?clearMistake(id):addMistake(id,type);}
@@ -447,16 +540,58 @@ function completeSession(durSec){
   }
   S.sessions.push({datum:tt,dauerSek:durSec,xp:SES.correct*5,aufgaben:SES.total,genauigkeit:SES.total?Math.round(SES.correct/SES.total*100):0});
   addXp(20);
-  if(SES.total>0&&SES.correct===SES.total)grantBadge("perfect");
-  const nb=checkBadges(),nc=checkCoupons(),lvl=SES.leveledTo;
-  advanceLiga();save();celebrate(nb,nc,lvl);
+  if(SES.total>0&&SES.correct===SES.total)bumpCounter("perfectSessions");
+  if(SES.bonus)bumpCounter("themedSessions");
+  const h=new Date().getHours();if(h<8)bumpCounter("earlySessions");if(h>=22)bumpCounter("lateSessions");
+  const dow=new Date().getDay();if(dow===0||dow===6)bumpCounter("weekendSessions");
+  const nb=checkBadges(),nc=checkCoupons(),egg=checkEasterEggs(),lvl=SES.leveledTo;
+  advanceLiga();save();celebrate(nb,nc,lvl,egg);
+}
+function checkEasterEggs(){
+  let revealed=null;
+  EASTER_EGGS.forEach(e=>{
+    if(S.streak.aktuell>=e.day&&!S.eggs.revealed[e.day]){
+      S.eggs.revealed[e.day]=todayStr();
+      if(e.effect==="gold")S.eggs.goldDate=todayStr();
+      if(e.effect==="owl")S.eggs.owl=true;
+      if(e.mail)sendMail(e.msubj(S.user.name),e.mbody(S.user.name),"egg_"+e.day);
+      revealed=e;
+    }
+  });
+  save();return revealed;
+}
+function nextEggTeaser(){
+  for(const e of EASTER_EGGS){
+    if(!S.eggs.revealed[e.day]){const away=e.day-S.streak.aktuell;if(away>=1&&away<=3)return away;}
+  }
+  return 0;
 }
 function hasBadge(id){return S.badges.some(b=>b.id===id);}
-function grantBadge(id){if(BADGES.find(b=>b.id===id)&&!hasBadge(id)){S.badges.push({id,datum:todayStr()});save();return true;}return false;}
+function grantBadge(id){if(!hasBadge(id)){S.badges.push({id,datum:todayStr()});save();return true;}return false;}
+function bumpCounter(key,n){S.counters[key]=(S.counters[key]||0)+(n||1);}
 function checkBadges(){
-  const got=[];const m={first:S.sessions.length>=1,s3:S.streak.aktuell>=3,s7:S.streak.aktuell>=7,s30:S.streak.aktuell>=30,w50:S.wordsSeen>=50,w100:S.wordsSeen>=100};
-  for(const k in m)if(m[k]&&grantBadge(k))got.push(BADGES.find(b=>b.id===k));
+  const got=[];
+  BADGE_CATALOG.forEach(c=>{const v=c.get();c.th.forEach((th,i)=>{if(v>=th&&grantBadge(c.cat+"_"+i))got.push({id:c.cat+"_"+i,ic:c.icon,name:c.name+" "+th});});});
+  BADGE_SPECIAL.forEach(s=>{if(s.when()&&grantBadge(s.id))got.push({id:s.id,ic:s.icon,name:s.name});});
   return got;
+}
+function badgeEarnedCount(){let n=0;BADGE_CATALOG.forEach(c=>n+=badgeTier(c));BADGE_SPECIAL.forEach(s=>{if(hasBadge(s.id))n++;});return n;}
+function badgeTotalCount(){let n=BADGE_SPECIAL.length;BADGE_CATALOG.forEach(c=>n+=c.th.length);return n;}
+function badgeGridHTML(){
+  const cats=BADGE_CATALOG.map(c=>{
+    const val=c.get(),tier=badgeTier(c),max=c.th.length;
+    const nextTh=c.th[tier],prevTh=tier>0?c.th[tier-1]:0;
+    const pct=nextTh?Math.max(0,Math.min(100,Math.round((val-prevTh)/(nextTh-prevTh)*100))):100;
+    return `<div class="badgerow ${tier>0?'on':''}"><span class="bicon">${c.icon}</span><div class="bmeta">
+      <div class="bname"><span>${esc(c.name)}</span><span class="btier">${tier}/${max}</span></div>
+      <div class="bbar"><i style="width:${pct}%"></i></div>
+      <div class="muted sm">${nextTh?`${val} / ${nextTh}`:t("badge_maxed")}</div></div></div>`;
+  }).join("");
+  const specials=BADGE_SPECIAL.map(s=>{const on=hasBadge(s.id);
+    return `<div class="badgerow ${on?'on':''}"><span class="bicon">${s.icon}</span><div class="bmeta">
+      <div class="bname"><span>${esc(s.name)}</span><span class="btier">${on?"✓":"–"}</span></div></div></div>`;
+  }).join("");
+  return cats+specials;
 }
 function checkCoupons(){
   let g=null;
@@ -468,7 +603,9 @@ function advanceLiga(){
   if(S.liga.week!==wk){S.liga.week=wk;S.liga.meineXpWoche=0;S.liga.npcs.forEach(n=>n.xpWoche=Math.round(rnd(0,n.rate)));}
   const gap=Math.max(0,daysBetween(S.liga.lastTag,tt));
   for(let d=0;d<gap;d++)S.liga.npcs.forEach(n=>{let g=rnd(n.rate*0.5,n.rate*1.4);if(n.xpWoche>S.liga.meineXpWoche+40)g*=0.55;if(n.xpWoche<S.liga.meineXpWoche-40)g*=1.4;n.xpWoche+=Math.round(g);});
-  S.liga.lastTag=tt;if(ligaSorted()[0].me)grantBadge("beatall");save();
+  S.liga.lastTag=tt;
+  if(ligaSorted()[0].me&&S.counters.leagueWeekCounted!==wk){bumpCounter("leagueWins");S.counters.leagueWeekCounted=wk;} // max. 1 Liga-Sieg pro Woche zählen
+  save();
 }
 function ligaSorted(){
   const a=[...S.liga.npcs.map(n=>({name:n.name,av:n.av,pts:n.xpWoche,me:false})),{name:S.user.name||"You",av:"💖",pts:S.liga.meineXpWoche,me:true}];
@@ -493,6 +630,110 @@ function weeklyReportIfDue(){
   sendMail(t("mail_week_subj",S.user.name,min),t("mail_week_body",S.user.name,ses.length,min,S.streak.aktuell,S.user.niveau,S.wordsSeen,rank()),tag);
 }
 
+/* ---------- Feedback-Button (S11): 🐞 + html2canvas (self-hosted) + 50-entry error ring buffer + offline queue.
+   No backend: reports go via the existing Web3Forms/freundEmail infra, same as coupon/badge mails. ---------- */
+const ERRBUF_KEY="dl_errbuf",FBQUEUE_KEY="dl_fbqueue";
+function pushErrBuf(entry){
+  let buf=[];try{buf=JSON.parse(localStorage.getItem(ERRBUF_KEY))||[];}catch(e){buf=[];}
+  buf.push(Object.assign({ts:Date.now()},entry));
+  if(buf.length>50)buf=buf.slice(-50);
+  try{localStorage.setItem(ERRBUF_KEY,JSON.stringify(buf));}catch(e){}
+}
+function getErrBuf(){try{return JSON.parse(localStorage.getItem(ERRBUF_KEY))||[];}catch(e){return [];}}
+window.addEventListener("error",e=>pushErrBuf({type:"error",message:String(e.message||""),source:e.filename||"",line:e.lineno||0}));
+window.addEventListener("unhandledrejection",e=>pushErrBuf({type:"unhandledrejection",message:String((e.reason&&e.reason.message)||e.reason||"")}));
+(function(){
+  const orig=console.error;
+  console.error=function(){try{pushErrBuf({type:"console.error",message:Array.prototype.slice.call(arguments).map(String).join(" ").slice(0,500)});}catch(e){}return orig.apply(console,arguments);};
+})();
+
+let FEEDBACK=null;
+function loadHtml2Canvas(){
+  if(window.html2canvas)return Promise.resolve();
+  return new Promise((resolve,reject)=>{
+    const s=document.createElement("script");
+    s.src="html2canvas.min.js";s.onload=()=>resolve();s.onerror=()=>reject(new Error("load failed"));
+    document.head.appendChild(s);
+  });
+}
+function currentViewName(){return ["home","session","liga","stats","reward","settings","blocker"].find(v=>!document.getElementById("view-"+v).classList.contains("hidden"))||"unknown";}
+async function captureScreenshot(){
+  try{
+    await loadHtml2Canvas();
+    const canvas=await window.html2canvas(document.body,{backgroundColor:"#fff7f3",scale:1});
+    const max=1200;let out=canvas;
+    if(Math.max(canvas.width,canvas.height)>max){
+      const ratio=max/Math.max(canvas.width,canvas.height);
+      const c2=document.createElement("canvas");
+      c2.width=Math.round(canvas.width*ratio);c2.height=Math.round(canvas.height*ratio);
+      c2.getContext("2d").drawImage(canvas,0,0,c2.width,c2.height);
+      out=c2;
+    }
+    return out.toDataURL("image/jpeg",0.55);
+  }catch(e){return null;}
+}
+async function openFeedback(){
+  const viewName=currentViewName();
+  const shot=await captureScreenshot(); // vor dem Overlay erzeugen, damit das Overlay selbst nicht mit drauf ist
+  FEEDBACK={screenshot:shot,view:viewName};
+  renderFeedbackOverlay();
+}
+function closeFeedback(){FEEDBACK=null;renderFeedbackOverlay();}
+function renderFeedbackOverlay(){
+  const box=document.getElementById("feedbackoverlay");if(!box)return;
+  if(!FEEDBACK){box.classList.add("hidden");box.innerHTML="";return;}
+  box.classList.remove("hidden");
+  box.innerHTML=`<div class="fbcard">
+    <button class="fbclose" onclick="closeFeedback()">✕</button>
+    <h2 style="font-size:16px">${t("fb_title")}</h2>
+    ${FEEDBACK.screenshot?`<img src="${FEEDBACK.screenshot}" class="fbshot" alt="Screenshot"/>`:`<p class="muted sm">${t("fb_noshot")}</p>`}
+    <textarea id="fbtext" rows="3" placeholder="${t("fb_ph")}"></textarea>
+    <div class="row" style="margin-top:8px">
+      <button class="btn" onclick="sendFeedback()">${t("fb_send")}</button>
+      <button class="btn ghost" onclick="closeFeedback()">${t("fb_cancel")}</button>
+    </div>
+  </div>`;
+}
+function feedbackQueue(){try{return JSON.parse(localStorage.getItem(FBQUEUE_KEY))||[];}catch(e){return [];}}
+function saveFeedbackQueue(q){try{localStorage.setItem(FBQUEUE_KEY,JSON.stringify(q.slice(-20)));}catch(e){}}
+async function sendFeedback(){
+  const ta=document.getElementById("fbtext");const text=(ta&&ta.value||"").trim();
+  if(!text){openModal(`<div class="emo">🐞</div><h2>${t("fb_need_text")}</h2><button class="btn block" onclick="closeModal()">${t("ok")}</button>`);return;}
+  const report={ts:Date.now(),text,view:FEEDBACK.view,ua:navigator.userAgent,screen:innerWidth+"x"+innerHeight,
+    niveau:S.user.niveau,streak:S.streak.aktuell,errors:getErrBuf(),screenshot:FEEDBACK.screenshot};
+  closeFeedback();
+  const q=feedbackQueue();q.push(report);saveFeedbackQueue(q);
+  await flushFeedbackQueue(false);
+}
+async function reportToMail(report){
+  if(!S.user.freundEmail||!S.user.w3key)return false;
+  const errLines=report.errors.slice(-5).map(e=>`- [${e.type}] ${(e.message||"").slice(0,150)}`).join("\n")||"(none)";
+  const body=`Feedback from Cœur·Lingo\n\n${report.text}\n\n---\nView: ${report.view}\nLevel: ${report.niveau} · Streak: ${report.streak}\nScreen: ${report.screen}\nBrowser: ${report.ua}\n\nRecent errors:\n${errLines}`;
+  try{
+    const fd=new FormData();
+    fd.append("access_key",S.user.w3key);fd.append("subject","🐞 Cœur·Lingo feedback");
+    fd.append("from_name","Cœur·Lingo");fd.append("email",S.user.freundEmail);fd.append("message",body);
+    if(report.screenshot){const blob=await (await fetch(report.screenshot)).blob();fd.append("attachment",blob,"screenshot.jpg");}
+    const res=await fetch("https://api.web3forms.com/submit",{method:"POST",body:fd});
+    if(res.ok)return true;
+  }catch(e){}
+  try{ // Fallback: text-only (matches existing sendMail JSON pattern) if the attachment upload failed
+    const res2=await fetch("https://api.web3forms.com/submit",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},
+      body:JSON.stringify({access_key:S.user.w3key,subject:"🐞 Cœur·Lingo feedback",from_name:"Cœur·Lingo",message:body,email:S.user.freundEmail})});
+    return res2.ok;
+  }catch(e){return false;}
+}
+async function flushFeedbackQueue(silent){
+  const q=feedbackQueue();if(!q.length)return;
+  const remaining=[];
+  for(const report of q){if(await reportToMail(report)){}else remaining.push(report);}
+  saveFeedbackQueue(remaining);
+  const sentCount=q.length-remaining.length;
+  if(silent)return;
+  if(sentCount>0)openModal(`<div class="emo">🐞</div><h2>${t("fb_sent")}</h2><p class="muted">${t("fb_sent_b")}</p><button class="btn block" onclick="closeModal()">${t("ok")}</button>`);
+  else if(remaining.length)openModal(`<div class="emo">📭</div><h2>${t("fb_queued")}</h2><p class="muted">${t("fb_queued_b")}</p><button class="btn block" onclick="closeModal()">${t("ok")}</button>`);
+}
+
 /* ===================================================================
    NAV / HEADER
    =================================================================== */
@@ -503,8 +744,10 @@ function show(v){
   ({home:renderHome,liga:renderLiga,stats:renderStats,reward:renderReward,settings:renderSettings,blocker:renderBlocker}[v]||(()=>{}))();
 }
 function setNavLabels(){document.querySelectorAll("nav .nl").forEach(s=>s.textContent=t(s.dataset.k));}
+function owlCheer(){openModal(`<div class="emo">🦉</div><h2>${t("owl_title")}</h2><p class="compliment" style="margin-top:8px">“${esc(todaysCompliment())}”</p><button class="btn block" onclick="closeModal()">${t("great")}</button>`);}
 function renderHeader(){
   rolloverXp();setNavLabels();
+  document.body.classList.toggle("goldday",S.eggs&&S.eggs.goldDate===todayStr());
   document.getElementById("hStreak").textContent=S.streak.aktuell;
   document.getElementById("hXp").style.width=Math.min(100,S.xp.heute/DAILY_XP_GOAL*100)+"%";
   document.getElementById("hXpToday").textContent=`${S.xp.heute} / ${DAILY_XP_GOAL} XP`;
@@ -519,8 +762,11 @@ function todaysCompliment(){
 /* ---------- HOME ---------- */
 function renderHome(){
   ensureChecklist();const done=checklistDone();
+  const teaser=nextEggTeaser();
   document.getElementById("view-home").innerHTML=`
    <div class="compliment">“${esc(todaysCompliment())}”</div>
+   ${teaser?`<div class="card eggcard" style="text-align:center;padding:13px"><b>🎁 ${t("egg_teaser",teaser)}</b><div class="muted sm" style="margin-top:3px">${t("egg_teaser_sub")}</div></div>`:""}
+   ${S.eggs.owl?`<div class="card owlcard" onclick="owlCheer()"><span class="owl">🦉</span><span class="muted sm">${t("owl_tap")}</span></div>`:""}
    <div class="card">
      <h2>${esc(S.user.name)?esc(S.user.name):t("nameFallback")} 👋 <span class="lvltag">${S.user.niveau}</span></h2>
      <p class="muted sm" style="margin:0 0 14px">${done?t("greetSub_done"):t("greetSub_todo")}</p>
@@ -569,13 +815,13 @@ function renderVocab(){
   vw().innerHTML=head(t("vocab_new",SES.si+1,SES.items.length))+`
      <div class="flip" id="flip" onclick="this.classList.toggle('on')" style="margin-top:6px"><div class="flip-in">
        <div class="face"><div><div class="muted sm">${t("langName")}</div><div class="big">${esc(gMean(it))}</div><div class="sm muted" style="margin-top:8px">${t("vocab_tap")}</div></div></div>
-       <div class="face back"><div><div class="muted sm">Deutsch <span class="lvltag">${it.lvl}</span></div><div class="big">${esc(it.de)}</div><div class="sm" style="margin-top:8px">${esc(it.ex)}</div></div></div>
+       <div class="face back"><div><div class="muted sm">Deutsch <span class="lvltag">${it.lvl}</span></div><div class="big">${esc(it.de)}</div><div class="sm" style="margin-top:8px">${wordify(esc(it.ex))}</div></div></div>
      </div></div>
      <div class="center"><button class="spk" onclick="event.stopPropagation();playAudio(${q('w_'+it.id)},${q(it.de)})">${t("listen")}</button></div></div>
    <p class="sm muted center">${t("vocab_q")}</p>
    <div class="row"><button class="btn ghost" onclick="vocabRate(false)">${t("vocab_no")}</button><button class="btn" onclick="vocabRate(true)">${t("vocab_yes")}</button></div>`;
 }
-function vocabRate(known){const it=SES.items[SES.si];srsUpdate(it.id,known);if(known&&S.mastery[it.lvl]!=null){S.mastery[it.lvl]+=0.5;save();}
+function vocabRate(known){const it=SES.items[SES.si];srsUpdate(it.id,known);bumpCounter("vocab");if(known&&S.mastery[it.lvl]!=null){S.mastery[it.lvl]+=0.5;}save();
   if(SES.si<SES.items.length-1){SES.si++;renderVocab();}else{addXp(15);blockDone();}}
 
 function bUeber(){SES.items=pickSRS(INHALTE.uebersetzen,3);if(!SES.items.length){blockDone();return;}renderUeber();}
@@ -593,7 +839,7 @@ function checkUeber(){
   const ok=[it.de,...(it.alt||[])].some(a=>norm(a)===norm(inp));
   SES.locked=true;record(ok,it.lvl,it.id,"uebersetzen");srsUpdate(it.id,ok);markSeen(it.id);
   document.getElementById("cb").classList.add("hidden");document.getElementById("uin").disabled=true;
-  document.getElementById("fb").innerHTML=(ok?`<div class="flash ok">${t("perfect_is",esc(it.de))}</div>`:`<div class="flash no">${t("answer_is",esc(it.de))}</div>`)
+  document.getElementById("fb").innerHTML=(ok?`<div class="flash ok">${t("perfect_is",wordify(esc(it.de)))}</div>`:`<div class="flash no">${t("answer_is",wordify(esc(it.de)))}</div>`)
     +`<button class="btn block" style="margin-top:12px" onclick="ueberNext()">${SES.si<SES.items.length-1?t("next"):t("cont")}</button>`;
   if(ok)addXp(8);
 }
@@ -636,7 +882,7 @@ function checkSatz(){
   const got=[...document.getElementById("answer").children].map(c=>c.dataset.w).join(" ");
   SES.locked=true;const ok=got===it.loesung;record(ok,it.lvl,it.id,"satzbau");
   document.getElementById("cb").classList.add("hidden");
-  document.getElementById("fb").innerHTML=(ok?`<div class="flash ok">${t("perfect_is",esc(it.loesung))}</div>`:`<div class="flash no">${t("answer_is",esc(it.loesung))}</div>`)
+  document.getElementById("fb").innerHTML=(ok?`<div class="flash ok">${t("perfect_is",wordify(esc(it.loesung)))}</div>`:`<div class="flash no">${t("answer_is",wordify(esc(it.loesung)))}</div>`)
     +`<div class="center" style="margin:10px 0"><button class="spk" onclick="playAudio(${q('s_'+it.id)},${q(it.loesung)})">${t("listen")}</button></div>`
     +`<button class="btn block" onclick="satzNext()">${SES.si<SES.items.length-1?t("next"):t("cont")}</button>`;
   if(ok)addXp(7);
@@ -646,15 +892,16 @@ function satzNext(){SES.locked=false;if(SES.si<SES.items.length-1){SES.si++;rend
 function bDialog(){const d=pickLevel(INHALTE.dialoge,1)[0];if(!d){blockDone();return;}SES.dlg=d;SES.items=d.zeilen;renderDialog();}
 function renderDialog(){
   const z=SES.items[SES.si];recURL=null;
+  const audioId=`d_${SES.dlg.id}_${SES.si}`; // captured now, not inside the setTimeout closure — SES may be null by the time it fires
   vw().innerHTML=head(`🗣️ ${esc(SES.dlg.titel)} <span class="lvltag">${SES.dlg.lvl}</span>`)+`
-     <div class="qtext">${esc(z.de)}</div><p class="muted">${esc(gDlgLine(SES.dlg,SES.si))}</p>
-     <button class="bigspk" onclick="playAudio(${q('d_'+SES.dlg.id+'_'+SES.si)},${q(z.de)})">${t("listen")}</button>
+     <div class="qtext">${wordify(esc(z.de))}</div><p class="muted">${esc(gDlgLine(SES.dlg,SES.si))}</p>
+     <button class="bigspk" onclick="playAudio(${q(audioId)},${q(z.de)})">${t("listen")}</button>
      <div class="row" style="margin-top:10px"><button class="btn ghost" onclick="toggleRecord(this)">${t("record")}</button><button id="playmine" class="btn ghost hidden" onclick="playMine()">${t("play_mine")}</button></div>
      <p class="sm muted center" style="margin:14px 0 0">${t("dlg_repeat")}</p></div>
    <button class="btn block" onclick="dlgNext()">${SES.si<SES.items.length-1?t("dlg_next"):t("dlg_end")}</button>`;
-  setTimeout(()=>playAudio(`d_${SES.dlg.id}_${SES.si}`,z.de),350);
+  setTimeout(()=>playAudio(audioId,z.de),350);
 }
-function dlgNext(){if(SES.si<SES.items.length-1){SES.si++;renderDialog();}else{addXp(10);blockDone();}}
+function dlgNext(){bumpCounter("dialog");save();if(SES.si<SES.items.length-1){SES.si++;renderDialog();}else{addXp(10);blockDone();}}
 
 function bHoeren(){SES.items=pickLevel(INHALTE.hoerverstehen,3);if(!SES.items.length){blockDone();return;}renderHoeren();}
 function renderHoeren(){
@@ -714,7 +961,7 @@ function pairTap(b){
   if(!SES.sel){if(b.dataset.side!=="L")return;SES.sel=b;b.classList.add("sel");return;}
   if(b.dataset.side==="L"){SES.sel.classList.remove("sel");SES.sel=b;b.classList.add("sel");return;}
   const ok=SES.sel.dataset.i===b.dataset.i;
-  if(ok){SES.sel.classList.remove("sel");SES.sel.classList.add("ok");b.classList.add("ok");SES.matched++;record(true,SES.pset.lvl);addXp(4);
+  if(ok){SES.sel.classList.remove("sel");SES.sel.classList.add("ok");b.classList.add("ok");SES.matched++;record(true,SES.pset.lvl);bumpCounter("paare");addXp(4);
     if(SES.matched===SES.pset.pairs.length)document.getElementById("fb").innerHTML=`<div class="flash ok">${t("paare_done")}</div><button class="btn block" style="margin-top:12px" onclick="blockDone()">${t("cont")}</button>`;
   }else{b.classList.add("err");const s=SES.sel;setTimeout(()=>{b.classList.remove("err");s.classList.remove("sel");},500);SES.sel=null;record(false,SES.pset.lvl);}
 }
@@ -732,15 +979,69 @@ function playAudio(id,fallbackText){
   }catch(e){speak(fallbackText);}
 }
 
+/* ---------- Wort-Antippen (S8): antippbare DE-Wörter → lokales Wörterbuch → Cache → ⭐ ---------- */
+const DICT=window.DICT_DE_EN||{};
+/* Wörter (≥3 Buchstaben) in bereits escaptem Text antippbar machen. Läuft NACH esc(). */
+function wordify(escapedText){
+  return String(escapedText).replace(/([A-Za-zÄÖÜäöüß]{3,})/g,m=>`<span class="w" data-word="${m}">${m}</span>`);
+}
+/* Kaskade Stufe 1: lokales Wörterbuch, mit sanfter Suffix-Reduktion für flektierte Formen. */
+function localLookup(word){
+  const key=word.toLowerCase();
+  if(DICT[key])return DICT[key];
+  for(const suf of ["en","er","es","e","n","s"]){
+    if(key.endsWith(suf)&&key.length>suf.length+2){
+      const stem=key.slice(0,-suf.length);
+      if(DICT[stem])return DICT[stem];
+    }
+  }
+  return null;
+}
+let WORD_POPUP=null;
+function openWordPopup(word){
+  const clean=word.replace(/[^A-Za-zÄÖÜäöüß]/g,"");if(!clean)return;
+  bumpCounter("lookups");save();
+  const key=clean.toLowerCase();
+  let en=localLookup(clean);            // Stufe 1: lokales Dict
+  if(!en&&S.wordCache[key])en=S.wordCache[key]; // Stufe 2: Cache (frühere Treffer)
+  WORD_POPUP={word:clean,en:en||null};
+  renderWordPopup();
+}
+function closeWordPopup(){WORD_POPUP=null;renderWordPopup();}
+function renderWordPopup(){
+  const box=document.getElementById("wordpopup");if(!box)return;
+  if(!WORD_POPUP){box.classList.add("hidden");box.innerHTML="";return;}
+  const p=WORD_POPUP;box.classList.remove("hidden");
+  box.innerHTML=`<div class="wpcard">
+    <button class="wpclose" onclick="closeWordPopup()">✕</button>
+    <div class="wpword">${esc(p.word)} <button class="wpspk" onclick="speak(${q(p.word)})">🔊</button></div>
+    <div class="wptrans">${p.en?esc(p.en):'<span class="muted">No translation in the offline dictionary yet.</span>'}</div>
+    <button class="btn ghost sm" style="margin-top:10px" onclick="starWordFromPopup()">⭐ ${t("remember_word")}</button>
+  </div>`;
+}
+function starWordFromPopup(){
+  if(!WORD_POPUP)return;const p=WORD_POPUP;const key=p.word.toLowerCase();
+  if(!S.customWords[key]){S.customWords[key]={de:p.word,en:p.en||"",datum:todayStr()};save();}
+  closeWordPopup();
+  openModal(`<div class="emo">⭐</div><h2>${t("word_saved")}</h2><p class="muted">${esc(p.word)}${p.en?` — ${esc(p.en)}`:""}</p><button class="btn block" onclick="closeModal()">${t("ok")}</button>`);
+}
+/* Capture-Phase, damit ein Wort-Tap NICHT die Karten-Flip-onclick auslöst. */
+document.addEventListener("click",e=>{
+  const w=e.target.closest("span.w");
+  if(w){e.stopPropagation();openWordPopup(w.getAttribute("data-word"));}
+},true);
+
 /* ---------- celebration ---------- */
-function celebrate(nb,nc,lvl){
+function celebrate(nb,nc,lvl,egg){
   confetti();let extra="";
+  if(egg){confetti();extra+=`<div class="card on eggcard" style="margin:14px 0 0"><div style="font-size:40px">${egg.icon}</div><div class="sm" style="color:var(--gold);font-weight:800;letter-spacing:.5px">✨ ${t("egg_unlocked")} ✨</div><b style="display:block;margin-top:2px">${esc(egg.title)}</b><div class="muted sm" style="margin-top:4px">${esc(egg.desc)}</div>${egg.mail?`<div class="sm" style="color:var(--good);margin-top:6px">${t("coupon_notified")}</div>`:""}</div>`;
+    if(egg.effect==="owl")setTimeout(()=>speak("Ich bin so stolz auf dich!"),500);}
   if(lvl){extra+=`<div class="card on" style="border:1.5px solid #9be7c4;background:#effbf5;margin:14px 0 0"><div style="font-size:34px">🎓</div><b>${t("level_unlocked",lvl)}</b><div class="muted sm">${t("level_sub")}</div></div>`;
     sendMail(t("mail_level_subj",S.user.name,lvl),t("mail_level_body",S.user.name,lvl),"level_"+lvl);}
   if(nc){extra+=`<div class="card on" style="border:1.5px solid var(--gold);background:#fffaf0;margin:14px 0 0"><div style="font-size:34px">🎟️</div><b>${t("coupon_unlocked")}</b><div class="muted sm">${esc(cT(nc))} — ${esc(cD(nc))}</div><div class="sm" style="color:var(--good);margin-top:6px">${t("coupon_notified")}</div></div>`;
     sendMail(t("mail_coupon_subj",S.user.name,cT(nc)),t("mail_coupon_body",S.user.name,nc,cT(nc),cD(nc)),"coupon_"+nc);}
-  if(nb&&nb.length){extra+=`<div class="sm" style="margin-top:12px">${t("badges_line",nb.map(b=>b.ic+" "+bT(b)).join(" · "))}</div>`;
-    sendMail(t("mail_badge_subj",S.user.name),t("mail_badge_body",S.user.name,nb.map(b=>bT(b)).join(", "),S.streak.aktuell),"badge_"+todayStr()+"_"+nb.map(b=>b.id).join(""));}
+  if(nb&&nb.length){extra+=`<div class="sm" style="margin-top:12px">${t("badges_line",nb.map(b=>b.ic+" "+b.name).join(" · "))}</div>`;
+    sendMail(t("mail_badge_subj",S.user.name),t("mail_badge_body",S.user.name,nb.map(b=>b.name).join(", "),S.streak.aktuell),"badge_"+todayStr()+"_"+nb.map(b=>b.id).join(""));}
   const acc=S.sessions.length?S.sessions[S.sessions.length-1].genauigkeit:0;
   openModal(`<div class="emo">🎉</div><h2>${t("celebr_title")}</h2><p class="muted">${t("celebr_sub",S.streak.aktuell,acc)}</p>${extra}
     <button class="big-cta" style="margin-top:18px" onclick="closeModal();SES=null;show('home')">${t("continueBtn")}</button>
@@ -801,7 +1102,7 @@ function renderReward(){
      ${MILESTONES.map(m=>{const e=S.coupons.find(c=>c.meilenstein===m);return `<div class="coupon ${e?'on':'locked'}"><div class="d">${m}<div class="sm" style="font-weight:600;color:var(--muted)">${t("days")}</div></div>
        <div class="t"><b>${esc(cT(m))}</b><span class="muted sm">${esc(cD(m))}</span>${e?`<div class="st">${e.status==="eingelöst"?t("redeemed"):t("unlocked_st")}</div>`:`<div class="sm muted">${t("left_days",Math.max(0,m-S.streak.aktuell))}</div>`}</div>
        ${e&&e.status!=="eingelöst"?`<button class="btn gold" onclick="redeem(${m})">${t("redeem")}</button>`:''}</div>`}).join("")}</div>
-   <div class="card"><h2>${t("badges_title")}</h2><div class="grid3">${BADGES.map(b=>`<div class="badge ${hasBadge(b.id)?'on':''}"><div class="ic">${b.ic}</div>${esc(bT(b))}</div>`).join("")}</div></div>`;
+   <div class="card"><h2>${t("badges_title")} <span class="muted sm" style="font-weight:600">${badgeEarnedCount()}/${badgeTotalCount()}</span></h2>${badgeGridHTML()}</div>`;
 }
 function redeem(m){const c=S.coupons.find(x=>x.meilenstein===m);if(!c)return;c.status="eingelöst";save();
   sendMail(t("mail_redeem_subj",S.user.name,cT(m)),t("mail_redeem_body",S.user.name,cT(m),cD(m)),null);
@@ -935,9 +1236,14 @@ function boot(){
   if(!S){onboarding();return;}
   if(!S.mistakes)S.mistakes=[];
   if(!S.user.lang)S.user.lang="en";
+  if(!S.customWords)S.customWords={};
+  if(!S.wordCache)S.wordCache={};
+  if(!S.counters)S.counters={};
+  if(!S.eggs)S.eggs={revealed:{},goldDate:"",owl:false};
   rolloverXp();advanceLiga();ensureChecklist();weeklyReportIfDue();renderHeader();show("home");
 }
 boot();
+setTimeout(()=>{if(S)flushFeedbackQueue(true);},1800); // stiller Retry für wartende Feedback-Reports
 if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 </script>
 </body>
