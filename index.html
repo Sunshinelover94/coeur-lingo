@@ -145,6 +145,10 @@ span.w{border-bottom:1.5px dotted var(--coral);cursor:pointer}
 .wpword{font-size:19px;font-weight:800;color:var(--plum);display:flex;align-items:center;gap:8px}
 .wptrans{font-size:15px;color:var(--good);font-weight:600;margin-top:4px}
 .wpspk{background:var(--gold);color:#5a3a00;border-radius:999px;padding:4px 11px;font-weight:700;font-size:13px}
+.envar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+.envar:last-child{border-bottom:none}
+.envar.fit{background:#fffaf0;margin:0 -8px;padding:8px;border-radius:10px;border:1px solid var(--gold)}
+.fitchip{background:var(--gold);color:#5a3a00;border-radius:999px;padding:1px 8px;font-size:11px;font-weight:800;margin-left:7px;vertical-align:middle;white-space:nowrap}
 /* Feedback-Button (S11) */
 #feedbackoverlay{position:fixed;inset:0;z-index:96;background:rgba(44,26,36,.55);display:flex;align-items:center;justify-content:center;padding:16px}
 .fbcard{position:relative;width:100%;max-width:460px;max-height:88vh;overflow:auto;background:var(--card);border-radius:22px;box-shadow:var(--shadow);padding:22px 40px 20px 22px;text-align:left;animation:fade .2s ease}
@@ -196,6 +200,7 @@ span.w{border-bottom:1.5px dotted var(--coral);cursor:pointer}
 <script src="data/i18n-en.js"></script>
 <script src="data/inhalte-themen.js"></script>
 <script src="data/inhalte-vokabeln.js"></script>
+<script src="data/inhalte-vokabeln-b2.js"></script>
 <script src="data/thema-tags.js"></script>
 <script src="data/dict-de-en.js"></script>
 <script>
@@ -229,8 +234,15 @@ const STR={
   record:"🎙️ Record",stop_record:"⏹ Stop",play_mine:"▶️ Play mine",mic_denied:"Microphone not available.",
   block_n:(a,b)=>`Block ${a} / ${b}`,
   vocab_new:(i,n)=>`🗂️ New word ${i}/${n}`,vocab_tap:"Tap to reveal 👆",listen:"🔊 Listen",
+  training_tag:(i,n)=>`⭐ Review ${i}/${n}`,
   vocab_q:"Did you know this word?",vocab_no:"❌ Not yet",vocab_yes:"✅ I knew it",
-  remember_word:"Remember this word",word_saved:"Saved to your words",badge_maxed:"Max level! 🎉",
+  remember_word:"Remember this word",word_saved:"Saved to your words",word_unsave:"Remove",badge_maxed:"Max level! 🎉",
+  remember_sentence:"Remember this sentence",sentence_saved:"Saved to your sentences",sentence_unsave:"Remove",
+  my_training:(n)=>`⭐ My training (${n})`,training_word:"Word",training_sentence:"Sentence",training_remove:"🗑️ Forget this",
+  training_empty_hint:"Tap ⭐ on words or sentences during exercises to build a review deck.",
+  fits_sentence:"fits this sentence",no_en_entry:"No entry in the offline dictionary yet.",
+  streak_notice_frozen:(n)=>`🧊 ${n===1?"A streak freeze was":n+" streak freezes were"} used — your streak stayed safe.`,
+  streak_notice_reduced:(n)=>`Your streak slipped by ${n} while you were away. Today is a fresh start! 💪`,
   egg_unlocked:"Hidden reward",egg_teaser:(d)=>`A secret surprise in ${d} day${d>1?"s":""}!`,egg_teaser_sub:"Keep your streak alive to unlock it 🔥",
   owl_tap:"Tap your owl for a little boost 💛",owl_title:"Your owl says…",
   fb_title:"Report a bug or send feedback 🐞",fb_noshot:"(screenshot unavailable)",fb_ph:"Describe the bug or feedback…",
@@ -433,14 +445,14 @@ function save(){localStorage.setItem(KEY,JSON.stringify(S));}
 function freshState(name,email,lang){
   return{
     user:{name:name||"",niveau:"A2",lang:"en",freundEmail:email||"",w3key:"",voiceId:"hpp4J3VqNfWAUOO0d1Us"},
-    streak:{aktuell:0,längste:0,letzterTag:"",freezes:2},
+    streak:{aktuell:0,längste:0,letzterTag:"",freezes:2,abgerechnetBis:""},
     xp:{gesamt:0,heute:0,heuteDatum:todayStr()},
     mastery:{A2:0,B1:0,B2:0,C1:0},
     recent:[], srs:{}, wordsSeen:0, seenIds:[],
     sessions:[], badges:[], coupons:[], mistakes:[], backedUp:"",
     liga:{week:weekKey(todayStr()),meineXpWoche:0,lastTag:todayStr(),
       npcs:NPC_SEED.map(n=>({...n,xpWoche:Math.round(rnd(0,n.rate))}))},
-    checkliste:null, mailSent:{}, customWords:{}, wordCache:{}, counters:{}, eggs:{revealed:{},goldDate:"",owl:false}
+    checkliste:null, mailSent:{}, customWords:{}, customSentences:{}, wordCache:{}, counters:{}, eggs:{revealed:{},goldDate:"",owl:false}
   };
 }
 function curIdx(){return levelIdx(S.user.niveau);}
@@ -530,12 +542,30 @@ function pickLevel(arr,n){
 }
 
 /* ---------- complete ---------- */
+/* Fehltage abrechnen (Boot + vor jedem Session-Abschluss). Je Fehltag: 1 Freeze deckt den Tag
+   (Streak bleibt erhalten), ohne Freeze −3 (nie unter 0). Kein Reset-auf-1 mehr.
+   S.streak.abgerechnetBis verhindert Doppel-Abzug über mehrere Boots am selben Tag. */
+function reconcileStreak(){
+  const tt=todayStr();
+  if(S.streak.notice&&S.streak.notice.datum!==tt)delete S.streak.notice; // Notiz vom Vortag nicht ewig stehen lassen
+  if(!S.streak.letzterTag)return;
+  const from=(S.streak.abgerechnetBis&&S.streak.abgerechnetBis>S.streak.letzterTag)?S.streak.abgerechnetBis:S.streak.letzterTag;
+  const missed=daysBetween(from,tt)-1;
+  if(missed<=0)return;
+  let frozen=0,reduced=0;
+  for(let i=0;i<missed;i++){
+    if(S.streak.freezes>0){S.streak.freezes-=1;frozen++;}
+    else{const cut=Math.min(3,S.streak.aktuell);S.streak.aktuell-=cut;reduced+=cut;}
+  }
+  S.streak.abgerechnetBis=addDays(tt,-1);
+  if(frozen||reduced)S.streak.notice={frozen,reduced,datum:tt};
+  save();
+}
 function completeSession(durSec){
   const tt=todayStr();
+  reconcileStreak(); // Notiz bleibt für den ganzen Tag sichtbar (auch über die erste Session hinaus), verschwindet erst beim nächsten Tageswechsel von selbst
   if(S.streak.letzterTag!==tt){
-    if(S.streak.letzterTag===addDays(tt,-1)||S.streak.letzterTag==="")S.streak.aktuell+=1;
-    else if(daysBetween(S.streak.letzterTag,tt)>1&&S.streak.freezes>0){S.streak.freezes-=1;S.streak.aktuell+=1;}
-    else S.streak.aktuell=1;
+    S.streak.aktuell+=1;
     S.streak.letzterTag=tt;S.streak.längste=Math.max(S.streak.längste,S.streak.aktuell);
   }
   S.sessions.push({datum:tt,dauerSek:durSec,xp:SES.correct*5,aufgaben:SES.total,genauigkeit:SES.total?Math.round(SES.correct/SES.total*100):0});
@@ -632,6 +662,7 @@ function weeklyReportIfDue(){
 
 /* ---------- Feedback-Button (S11): 🐞 + html2canvas (self-hosted) + 50-entry error ring buffer + offline queue.
    No backend: reports go via the existing Web3Forms/freundEmail infra, same as coupon/badge mails. ---------- */
+const APP_VERSION="v11"; // muss mit sw.js' CACHE-Version mitgezogen werden (bei jedem Cache-Bump anpassen)
 const ERRBUF_KEY="dl_errbuf",FBQUEUE_KEY="dl_fbqueue";
 function pushErrBuf(entry){
   let buf=[];try{buf=JSON.parse(localStorage.getItem(ERRBUF_KEY))||[];}catch(e){buf=[];}
@@ -708,7 +739,7 @@ async function sendFeedback(){
 async function reportToMail(report){
   if(!S.user.freundEmail||!S.user.w3key)return false;
   const errLines=report.errors.slice(-5).map(e=>`- [${e.type}] ${(e.message||"").slice(0,150)}`).join("\n")||"(none)";
-  const body=`Feedback from Cœur·Lingo\n\n${report.text}\n\n---\nView: ${report.view}\nLevel: ${report.niveau} · Streak: ${report.streak}\nScreen: ${report.screen}\nBrowser: ${report.ua}\n\nRecent errors:\n${errLines}`;
+  const body=`Feedback from Cœur·Lingo ${APP_VERSION}\n\n${report.text}\n\n---\nView: ${report.view}\nLevel: ${report.niveau} · Streak: ${report.streak}\nScreen: ${report.screen}\nBrowser: ${report.ua}\n\nRecent errors:\n${errLines}`;
   try{
     const fd=new FormData();
     fd.append("access_key",S.user.w3key);fd.append("subject","🐞 Cœur·Lingo feedback");
@@ -781,8 +812,10 @@ function renderHome(){
      <div class="stat"><b>${weekMinutes()}</b><span class="sm muted">${t("stat_week")}</span></div>
      <div class="stat"><b>${rank()}<span class="sm">/6</span></b><span class="sm muted">${t("stat_league")}</span></div>
    </div></div>
+   ${S.streak.notice?`<div class="card" style="padding:12px;text-align:center"><span class="muted sm">${S.streak.notice.frozen?t("streak_notice_frozen",S.streak.notice.frozen):""}${S.streak.notice.frozen&&S.streak.notice.reduced?"<br>":""}${S.streak.notice.reduced?t("streak_notice_reduced",S.streak.notice.reduced):""}</span></div>`:""}
    ${(S.streak.aktuell>=7&&!S.backedUp)?`<div class="card" style="border:1.5px solid var(--gold);background:#fffaf0;text-align:center"><b>${t("backup_banner",S.streak.aktuell)}</b><button class="btn gold block" style="margin-top:10px" onclick="exportProgress()">${t("backup_btn")}</button></div>`:""}
    ${(S.mistakes&&S.mistakes.length)?`<button class="btn ghost block" style="margin-bottom:10px" onclick="startMistakeReview()">${t("review_mistakes",S.mistakes.length)}</button>`:""}
+   ${starPoolCount()?`<button class="btn ghost block" style="margin-bottom:10px" onclick="startStarTraining()">${t("my_training",starPoolCount())}</button>`:""}
    <button class="btn ghost block" style="margin-bottom:10px" onclick="openThemePicker()">${t("practice_theme")}</button>
    <button class="btn ghost block" onclick="show('blocker')">${t("btn_blocker")}</button>`;
 }
@@ -803,7 +836,7 @@ function sesProgress(){return `<div class="sprog"><i style="width:${SES.bi/SES.p
 function runBlock(){
   if(SES.bi>=SES.plan.length){finishSession();return;}
   SES.si=0;SES.locked=false;
-  ({vocab:bVocab,uebersetzen:bUeber,luecke:bLuecke,satzbau:bSatz,dialog:bDialog,grammatik:bGram,hoeren:bHoeren,konjugation:bKonj,paare:bPaare}[SES.plan[SES.bi]])();
+  ({vocab:bVocab,uebersetzen:bUeber,luecke:bLuecke,satzbau:bSatz,dialog:bDialog,grammatik:bGram,hoeren:bHoeren,konjugation:bKonj,paare:bPaare,starred:renderStarred}[SES.plan[SES.bi]])();
 }
 function blockDone(){if(!SES.bonus){const it=S.checkliste.items[SES.bi];if(it)it.erledigt=true;save();}SES.bi++;renderHeader();runBlock();}
 function finishSession(){completeSession(Math.round((Date.now()-SES.start)/1000));}
@@ -828,7 +861,7 @@ function bUeber(){SES.items=pickSRS(INHALTE.uebersetzen,3);if(!SES.items.length)
 function renderUeber(){
   const it=SES.items[SES.si];
   vw().innerHTML=head(t("ueber_tag",SES.si+1,SES.items.length)+` <span class="lvltag">${it.lvl}</span>`)+`
-     <p class="muted">${t("ueber_prompt")}</p><div class="qtext">${esc(gUeber(it))}</div>
+     <p class="muted">${t("ueber_prompt")}</p><div class="qtext">${wordifyEn(esc(gUeber(it)))}</div>
      <input id="uin" autocapitalize="sentences" autocomplete="off" placeholder="${t("ueber_ph")}" onkeydown="if(event.key==='Enter')checkUeber()"/>
      <div id="fb"></div><button class="btn block" id="cb" onclick="checkUeber()">${t("check")}</button></div>`;
   setTimeout(()=>{const e=document.getElementById("uin");e&&e.focus();},100);
@@ -840,6 +873,7 @@ function checkUeber(){
   SES.locked=true;record(ok,it.lvl,it.id,"uebersetzen");srsUpdate(it.id,ok);markSeen(it.id);
   document.getElementById("cb").classList.add("hidden");document.getElementById("uin").disabled=true;
   document.getElementById("fb").innerHTML=(ok?`<div class="flash ok">${t("perfect_is",wordify(esc(it.de)))}</div>`:`<div class="flash no">${t("answer_is",wordify(esc(it.de)))}</div>`)
+    +sentenceStarBtn(it.de,gUeber(it))
     +`<button class="btn block" style="margin-top:12px" onclick="ueberNext()">${SES.si<SES.items.length-1?t("next"):t("cont")}</button>`;
   if(ok)addXp(8);
 }
@@ -884,7 +918,8 @@ function checkSatz(){
   document.getElementById("cb").classList.add("hidden");
   document.getElementById("fb").innerHTML=(ok?`<div class="flash ok">${t("perfect_is",wordify(esc(it.loesung)))}</div>`:`<div class="flash no">${t("answer_is",wordify(esc(it.loesung)))}</div>`)
     +`<div class="center" style="margin:10px 0"><button class="spk" onclick="playAudio(${q('s_'+it.id)},${q(it.loesung)})">${t("listen")}</button></div>`
-    +`<button class="btn block" onclick="satzNext()">${SES.si<SES.items.length-1?t("next"):t("cont")}</button>`;
+    +sentenceStarBtn(it.loesung,gExpl(it))
+    +`<button class="btn block" style="margin-top:8px" onclick="satzNext()">${SES.si<SES.items.length-1?t("next"):t("cont")}</button>`;
   if(ok)addXp(7);
 }
 function satzNext(){SES.locked=false;if(SES.si<SES.items.length-1){SES.si++;renderSatz();}else blockDone();}
@@ -895,7 +930,8 @@ function renderDialog(){
   const audioId=`d_${SES.dlg.id}_${SES.si}`; // captured now, not inside the setTimeout closure — SES may be null by the time it fires
   vw().innerHTML=head(`🗣️ ${esc(SES.dlg.titel)} <span class="lvltag">${SES.dlg.lvl}</span>`)+`
      <div class="qtext">${wordify(esc(z.de))}</div><p class="muted">${esc(gDlgLine(SES.dlg,SES.si))}</p>
-     <button class="bigspk" onclick="playAudio(${q(audioId)},${q(z.de)})">${t("listen")}</button>
+     ${sentenceStarBtn(z.de,gDlgLine(SES.dlg,SES.si))}
+     <button class="bigspk" style="margin-top:8px" onclick="playAudio(${q(audioId)},${q(z.de)})">${t("listen")}</button>
      <div class="row" style="margin-top:10px"><button class="btn ghost" onclick="toggleRecord(this)">${t("record")}</button><button id="playmine" class="btn ghost hidden" onclick="playMine()">${t("play_mine")}</button></div>
      <p class="sm muted center" style="margin:14px 0 0">${t("dlg_repeat")}</p></div>
    <button class="btn block" onclick="dlgNext()">${SES.si<SES.items.length-1?t("dlg_next"):t("dlg_end")}</button>`;
@@ -997,6 +1033,61 @@ function localLookup(word){
   }
   return null;
 }
+/* EN→DE-Reverse-Index (lazy beim ersten Tap). Gloss-Zerlegung: Varianten an ,/;
+   Klammern raus, führendes the/to/a/an strippen; Voll-Phrase exakt + Einzelwörter schwach indexiert. */
+let DICT_EN=null;
+const EN_STOP=new Set(["the","and","for","you","your","she","her","his","him","has","have","had","are","was","were","not","with","that","this","its","can","could","will","would","should","please","who","what","when","where","how","why","yes","our","their","them","they","one","all","any","but","from","into","out","off","too"]);
+function buildEnIndex(){
+  DICT_EN={};
+  const add=(g,de,strong)=>{
+    if(!g)return;
+    (DICT_EN[g]=DICT_EN[g]||[]).push({de,strong});
+  };
+  for(const de in DICT){
+    String(DICT[de]).split(/[,;]/).forEach(v=>{
+      let g=v.replace(/\([^)]*\)/g,"").trim().toLowerCase();
+      g=g.replace(/^(to|the|a|an)\s+/,"").trim();
+      if(!g)return;
+      add(g,de,true);
+      g.split(/\s+/).forEach(w=>{if(w.length>=3&&w!==g&&!EN_STOP.has(w))add(w,de,false);});
+    });
+  }
+}
+/* Passt die DE-Variante in den Ziel-Satz? (Stamm-Präfix-Abgleich, flexionstolerant) */
+function fitsTarget(de,targetLower){
+  if(!targetLower)return false;
+  return de.split(/\s+/).some(w=>{
+    if(w.length<4)return false; // Mindestlänge gegen Kurzwort-Fehlalarme (z.B. "eis" in "teilweise")
+    const stem=w.slice(0,Math.max(4,w.length-2));
+    if(stem.length<4)return false;
+    return new RegExp("\\b"+stem.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).test(targetLower); // Wortgrenze statt freiem Substring
+  });
+}
+function enVariants(word,target){
+  if(!DICT_EN)buildEnIndex();
+  const key=word.toLowerCase();
+  let hits=DICT_EN[key]||[];
+  if(!hits.length&&key.endsWith("s"))hits=DICT_EN[key.slice(0,-1)]||[]; // simple plural/3rd-person
+  const targetLower=(target||"").toLowerCase();
+  const seen=new Set(),out=[];
+  hits.forEach(h=>{
+    if(seen.has(h.de))return;seen.add(h.de);
+    out.push({de:h.de,gloss:DICT[h.de],strong:h.strong,fit:fitsTarget(h.de,targetLower)});
+  });
+  out.sort((a,b)=>(b.fit-a.fit)||(b.strong-a.strong)||(a.de.length-b.de.length));
+  return out.slice(0,6);
+}
+/* EN-Wörter im Übersetzen-Prompt antippbar machen. Läuft NACH esc(). */
+function wordifyEn(escapedText){
+  return String(escapedText).replace(/([A-Za-z]{3,})/g,m=>EN_STOP.has(m.toLowerCase())?m:`<span class="w" data-enword="${m}">${m}</span>`);
+}
+function openEnWordPopup(word){
+  const clean=word.replace(/[^A-Za-z]/g,"");if(!clean)return;
+  bumpCounter("lookups");save();
+  const target=(SES&&SES.items&&SES.items[SES.si]&&SES.items[SES.si].de)||"";
+  WORD_POPUP={word:clean,enMode:true,variants:enVariants(clean,target)};
+  renderWordPopup();
+}
 let WORD_POPUP=null;
 function openWordPopup(word){
   const clean=word.replace(/[^A-Za-zÄÖÜäöüß]/g,"");if(!clean)return;
@@ -1012,23 +1103,54 @@ function renderWordPopup(){
   const box=document.getElementById("wordpopup");if(!box)return;
   if(!WORD_POPUP){box.classList.add("hidden");box.innerHTML="";return;}
   const p=WORD_POPUP;box.classList.remove("hidden");
+  if(p.enMode){
+    const rows=p.variants.length?p.variants.map(v=>`<div class="envar${v.fit?' fit':''}">
+        <div><b>${esc(v.de)}</b>${v.fit?`<span class="fitchip">✓ ${t("fits_sentence")}</span>`:""}<div class="muted sm">${esc(v.gloss)}</div></div>
+        <button class="wpspk" onclick="speak(${q(v.de)})">🔊</button></div>`).join("")
+      :`<div class="wptrans"><span class="muted">${t("no_en_entry")}</span></div>`;
+    box.innerHTML=`<div class="wpcard">
+      <button class="wpclose" onclick="closeWordPopup()">✕</button>
+      <div class="wpword">${esc(p.word)}</div>${rows}</div>`;
+    return;
+  }
+  const saved=!!S.customWords[p.word.toLowerCase()];
   box.innerHTML=`<div class="wpcard">
     <button class="wpclose" onclick="closeWordPopup()">✕</button>
     <div class="wpword">${esc(p.word)} <button class="wpspk" onclick="speak(${q(p.word)})">🔊</button></div>
     <div class="wptrans">${p.en?esc(p.en):'<span class="muted">No translation in the offline dictionary yet.</span>'}</div>
-    <button class="btn ghost sm" style="margin-top:10px" onclick="starWordFromPopup()">⭐ ${t("remember_word")}</button>
+    <button class="btn ${saved?'':'ghost'} sm" style="margin-top:10px" onclick="toggleStarWord()">${saved?`★ ${t("word_unsave")}`:`⭐ ${t("remember_word")}`}</button>
   </div>`;
 }
-function starWordFromPopup(){
+function toggleStarWord(){
   if(!WORD_POPUP)return;const p=WORD_POPUP;const key=p.word.toLowerCase();
-  if(!S.customWords[key]){S.customWords[key]={de:p.word,en:p.en||"",datum:todayStr()};save();}
+  if(S.customWords[key]){delete S.customWords[key];save();renderWordPopup();return;}
+  S.customWords[key]={de:p.word,en:p.en||"",datum:todayStr()};save();
   closeWordPopup();
   openModal(`<div class="emo">⭐</div><h2>${t("word_saved")}</h2><p class="muted">${esc(p.word)}${p.en?` — ${esc(p.en)}`:""}</p><button class="btn block" onclick="closeModal()">${t("ok")}</button>`);
+}
+/* Sätze merken (Übersetzen/Satzbau/Dialog): eigener Speicher, gleiches Toggle-Muster wie Wörter. */
+function sentenceKey(de){return String(de).trim().toLowerCase().replace(/\s+/g," ").replace(/[.!?…]+$/,"");}
+function isSentenceStarred(de){return !!S.customSentences[sentenceKey(de)];}
+function toggleStarSentence(de,en){
+  const key=sentenceKey(de);
+  if(S.customSentences[key]){delete S.customSentences[key];save();return false;}
+  S.customSentences[key]={de,en:en||"",datum:todayStr()};save();return true;
+}
+function sentenceStarBtn(de,en){
+  const saved=isSentenceStarred(de);
+  return `<button class="btn ${saved?"":"ghost"} sm" style="margin-top:8px" onclick="onSentenceStarClick(this,${q(de)},${q(en||"")})">${saved?`★ ${t("sentence_unsave")}`:`⭐ ${t("remember_sentence")}`}</button>`;
+}
+function onSentenceStarClick(btn,de,en){
+  const nowSaved=toggleStarSentence(de,en);
+  btn.className=`btn ${nowSaved?"":"ghost"} sm`;
+  btn.textContent=nowSaved?`★ ${t("sentence_unsave")}`:`⭐ ${t("remember_sentence")}`;
 }
 /* Capture-Phase, damit ein Wort-Tap NICHT die Karten-Flip-onclick auslöst. */
 document.addEventListener("click",e=>{
   const w=e.target.closest("span.w");
-  if(w){e.stopPropagation();openWordPopup(w.getAttribute("data-word"));}
+  if(w){e.stopPropagation();
+    if(w.hasAttribute("data-enword"))openEnWordPopup(w.getAttribute("data-enword"));
+    else openWordPopup(w.getAttribute("data-word"));}
 },true);
 
 /* ---------- celebration ---------- */
@@ -1216,6 +1338,44 @@ function startMistakeReview(){
   show("session");runBlock();
 }
 
+/* ---------- ⭐ Mein Training: Wiederholung gemerkter Wörter + Sätze ---------- */
+function starPool(){
+  const words=Object.entries(S.customWords||{}).map(([key,v])=>({type:"word",key,de:v.de,en:v.en}));
+  const sents=Object.entries(S.customSentences||{}).map(([key,v])=>({type:"sentence",key,de:v.de,en:v.en}));
+  return {words,sents};
+}
+function starPoolCount(){const {words,sents}=starPool();return words.length+sents.length;}
+function startStarTraining(){
+  const {words,sents}=starPool();
+  const items=[...shuffle(words).slice(0,10),...shuffle(sents).slice(0,4)];
+  if(!items.length)return;
+  SES={plan:["starred"],bi:0,start:Date.now(),correct:0,total:0,items:shuffle(items),si:0,locked:false,leveledTo:null,theme:null,bonus:true};
+  show("session");runBlock();
+}
+function renderStarred(){
+  const it=SES.items[SES.si];
+  vw().innerHTML=head(t("training_tag",SES.si+1,SES.items.length))+`
+     <div class="flip" id="flip" onclick="this.classList.toggle('on')" style="margin-top:6px"><div class="flip-in">
+       <div class="face"><div><div class="muted sm">${t("langName")}</div><div class="big">${esc(it.en||"—")}</div><div class="sm muted" style="margin-top:8px">${t("vocab_tap")}</div></div></div>
+       <div class="face back"><div><div class="muted sm">Deutsch <span class="lvltag">${it.type==="word"?t("training_word"):t("training_sentence")}</span></div><div class="big">${wordify(esc(it.de))}</div></div></div>
+     </div></div>
+     <div class="center"><button class="spk" onclick="event.stopPropagation();speak(${q(it.de)})">${t("listen")}</button></div></div>
+   <div class="row"><button class="btn ghost" onclick="starredNext()">${t("vocab_no")}</button><button class="btn" onclick="starredNext()">${t("vocab_yes")}</button></div>
+   <button class="btn ghost block sm" style="margin-top:10px" onclick="forgetStarred()">${t("training_remove")}</button>`;
+}
+function starredNext(){
+  if(SES.si<SES.items.length-1){SES.si++;renderStarred();}else{addXp(10);blockDone();}
+}
+function forgetStarred(){
+  const it=SES.items[SES.si];
+  if(it.type==="word")delete S.customWords[it.key];else delete S.customSentences[it.key];
+  save();
+  SES.items.splice(SES.si,1);
+  if(!SES.items.length){blockDone();return;}
+  if(SES.si>=SES.items.length)SES.si=SES.items.length-1;
+  renderStarred();
+}
+
 /* ---------- record & compare (pronunciation) ---------- */
 let REC=null,recURL=null;
 async function toggleRecord(btn){
@@ -1237,10 +1397,12 @@ function boot(){
   if(!S.mistakes)S.mistakes=[];
   if(!S.user.lang)S.user.lang="en";
   if(!S.customWords)S.customWords={};
+  if(!S.customSentences)S.customSentences={};
+  if(S.streak.abgerechnetBis==null)S.streak.abgerechnetBis="";
   if(!S.wordCache)S.wordCache={};
   if(!S.counters)S.counters={};
   if(!S.eggs)S.eggs={revealed:{},goldDate:"",owl:false};
-  rolloverXp();advanceLiga();ensureChecklist();weeklyReportIfDue();renderHeader();show("home");
+  reconcileStreak();rolloverXp();advanceLiga();ensureChecklist();weeklyReportIfDue();renderHeader();show("home");
 }
 boot();
 setTimeout(()=>{if(S)flushFeedbackQueue(true);},1800); // stiller Retry für wartende Feedback-Reports

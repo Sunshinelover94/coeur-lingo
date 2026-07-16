@@ -82,4 +82,17 @@ Native Hülle (Expo/React Native) um diesen Lernkern (WebView) + **Apple Screen-
 
 ---
 
+## 6) 🐞 Feedback-Button — Prozess
+
+Der 🐞-Button im Header (neben ⚙️) erfasst einen Screenshot + Freitext + die letzten Konsolenfehler (50er-Ringpuffer, `localStorage` Key `dl_errbuf`) und schickt das per Web3Forms an die in ⚙️ hinterlegte Partner-Mail — kein eigenes Backend, keine zusätzliche Infrastruktur. Bei fehlender Internetverbindung landet der Report in einer Offline-Queue (`dl_fbqueue`, max. 20 Einträge) und wird beim nächsten App-Start automatisch nachgesendet.
+
+**So wird eine Meldung bearbeitet:**
+1. Mail mit Betreff „🐞 Cœur·Lingo feedback" kommt an — Body beginnt mit der App-Version (`APP_VERSION` in `index.html`, muss synchron zur `sw.js`-Cache-Version gehalten werden), gefolgt vom Freitext, dann Ansicht/Niveau/Streak/Browser und den letzten 5 Fehlern aus dem Ringpuffer.
+2. Mail-Inhalt (Text + ggf. Screenshot) in eine neue Claude-Session einfügen.
+3. Anhand des Fehlerpuffers + der Nutzerbeschreibung die Ursache lokalisieren (meist reicht der Ringpuffer allein, ohne Reproduktion nötig).
+4. Fix in `index.html`/`sw.js`, danach **immer** headless verifizieren (`pwtools/verify-coeurlingo.js`, 0 Fehler Pflicht) — siehe `HANDOFF.md` für den Verify-/Deploy-Ablauf.
+5. `sw.js`-Cache-Version **und** `APP_VERSION` gemeinsam hochzählen, deployen.
+
+---
+
 *App-Name & Theme („Cœur·Lingo", Coral/Plum/Gold) sind eine Zeile zum Ändern. Icon: Mannheimer Wasserturm im Mix aus French Riviera, Marokko & Deutschland.*
