@@ -10,3 +10,8 @@ qa-content.js
 data/_dump/
 tools/_audio_manifest.json
 audio/
+
+# Interne Arbeitsnotizen/Backups/Build-Logs - Repo ist OEFFENTLICH (GitHub Pages), bleibt lokal
+HANDOFF.md
+_backup/
+tools/
