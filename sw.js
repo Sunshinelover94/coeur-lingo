@@ -1,5 +1,5 @@
 /* Cœur·Lingo — Service Worker (cache-first, offline-fähig) */
-const CACHE="coeurlingo-v12";
+const CACHE="coeurlingo-v13";
 const CORE=["./","./index.html","./data/inhalte.js","./data/inhalte-b2c1.js","./data/i18n-en.js","./data/inhalte-themen.js","./data/inhalte-vokabeln.js","./data/inhalte-vokabeln-b2.js","./data/inhalte-vokabeln-c1.js","./data/thema-tags.js","./data/dict-de-en.js","./manifest.webmanifest"];
 const OPT=["./icon-192.png","./icon-512.png","./html2canvas.min.js"];
 
