@@ -663,7 +663,7 @@ function weeklyReportIfDue(){
 
 /* ---------- Feedback-Button (S11): 🐞 + html2canvas (self-hosted) + 50-entry error ring buffer + offline queue.
    No backend: reports go via the existing Web3Forms/freundEmail infra, same as coupon/badge mails. ---------- */
-const APP_VERSION="v13"; // muss mit sw.js' CACHE-Version mitgezogen werden (bei jedem Cache-Bump anpassen)
+const APP_VERSION="v14"; // muss mit sw.js' CACHE-Version mitgezogen werden (bei jedem Cache-Bump anpassen)
 const ERRBUF_KEY="dl_errbuf",FBQUEUE_KEY="dl_fbqueue";
 function pushErrBuf(entry){
   let buf=[];try{buf=JSON.parse(localStorage.getItem(ERRBUF_KEY))||[];}catch(e){buf=[];}
