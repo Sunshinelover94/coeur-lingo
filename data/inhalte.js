@@ -43,7 +43,7 @@ window.INHALTE = {
     {id:"v32",lvl:"B1",de:"die Frist",fr:"le délai",ex:"Die Frist läuft nächste Woche ab.",exFr:"Le délai expire la semaine prochaine."},
     {id:"v33",lvl:"B1",de:"die Bescheinigung",fr:"l'attestation",ex:"Ich brauche eine Bescheinigung vom Arzt.",exFr:"J'ai besoin d'une attestation du médecin."},
     {id:"v34",lvl:"B1",de:"verschieben",fr:"reporter / décaler",ex:"Können wir den Termin verschieben?",exFr:"Pouvons-nous reporter le rendez-vous ?"},
-    {id:"v35",lvl:"B1",de:"die Unterlagen",fr:"les documents / pièces",ex:"Bringen Sie bitte alle Unterlagen mit.",exFr:"Apportez tous les documents."},
+    
     {id:"v36",lvl:"B1",de:"erledigen",fr:"régler / accomplir",ex:"Ich muss noch etwas erledigen.",exFr:"Je dois encore régler quelque chose."},
     {id:"v37",lvl:"B1",de:"sich kümmern um",fr:"s'occuper de",ex:"Ich kümmere mich darum.",exFr:"Je m'en occupe."},
     {id:"v38",lvl:"B1",de:"die Nebenkosten",fr:"les charges",ex:"Sind die Nebenkosten inklusive?",exFr:"Les charges sont-elles comprises ?"},
@@ -58,7 +58,7 @@ window.INHALTE = {
     {id:"v47",lvl:"B1",de:"trotzdem",fr:"quand même / malgré tout",ex:"Es ist schwer, aber ich mache trotzdem weiter.",exFr:"C'est dur, mais je continue quand même."},
     {id:"v48",lvl:"B1",de:"sich trauen",fr:"oser",ex:"Ich traue mich, Deutsch zu sprechen.",exFr:"J'ose parler allemand."},
     {id:"v49",lvl:"B1",de:"verlangen",fr:"exiger / réclamer",ex:"Der Vermieter verlangt eine Kaution.",exFr:"Le propriétaire exige une caution."},
-    {id:"v50",lvl:"B1",de:"sich beschweren",fr:"se plaindre",ex:"Ich möchte mich über den Lärm beschweren.",exFr:"Je voudrais me plaindre du bruit."},
+    {id:"v50",lvl:"A2",de:"sich beschweren",fr:"se plaindre",ex:"Ich möchte mich über den Lärm beschweren.",exFr:"Je voudrais me plaindre du bruit."},
     {id:"v51",lvl:"B1",de:"die Voraussetzung",fr:"la condition (préalable)",ex:"Gute Deutschkenntnisse sind eine Voraussetzung.",exFr:"De bonnes connaissances en allemand sont une condition."},
     {id:"v52",lvl:"B1",de:"zuständig",fr:"compétent / responsable (pour)",ex:"Wer ist dafür zuständig?",exFr:"Qui est responsable de cela ?"},
 
@@ -83,9 +83,9 @@ window.INHALTE = {
 
   /* ---------- Lückentexte (MC) ---------- */
   luecken: [
-    {id:"l01",lvl:"A2",satz:"Ich ___ morgen einen Termin beim Arzt.",options:["habe","bin","mache"],answer:0,fr:"« avoir » un rendez-vous → ich habe einen Termin."},
+    {id:"l01",lvl:"A2",satz:"Ich ___ morgen einen Termin beim Arzt.",options:["habe","bin","hat"],answer:0,fr:"« avoir » un rendez-vous → ich habe einen Termin."},
     {id:"l02",lvl:"A2",satz:"Können wir bitte die ___ haben?",options:["Rechnung","Termin","Frist"],answer:0,fr:"Au restaurant : « die Rechnung » (l'addition)."},
-    {id:"l03",lvl:"A2",satz:"Du musst in Mannheim ___.",options:["aussteigen","umsteigen","einsteigen"],answer:1,fr:"Changer de train = umsteigen."},
+    {id:"l03",lvl:"A2",satz:"Du musst in Mannheim ___.",options:["umgestiegen","umsteigen","steigst um"],answer:1,fr:"Changer de train = umsteigen."},
     {id:"l04",lvl:"A2",satz:"Ich ___ mich auf das Wochenende.",options:["freue","freut","frei"],answer:0,fr:"sich freuen auf : ich freue mich."},
     {id:"l05",lvl:"A2",satz:"Hast du ___ auf einen Kaffee?",options:["Lust","Glück","Zeit"],answer:0,fr:"Lust haben auf = avoir envie de."},
     {id:"l06",lvl:"A2",satz:"Die Heizung ___ nicht.",options:["funktioniert","funktionierst","funktion"],answer:0,fr:"3e pers. sing. : sie funktioniert."},
@@ -105,17 +105,17 @@ window.INHALTE = {
   /* ---------- Satzbau (ordnen) ---------- */
   satzbau: [
     {id:"s01",lvl:"A2",woerter:["Ich","habe","morgen","einen","Termin"],loesung:"Ich habe morgen einen Termin",fr:"J'ai un rendez-vous demain."},
-    {id:"s02",lvl:"A2",woerter:["Können","wir","bitte","die","Rechnung","haben"],loesung:"Können wir bitte die Rechnung haben",fr:"Pouvons-nous avoir l'addition ?"},
+    {id:"s02",lvl:"A2",woerter:["Können","wir","die","Rechnung","haben"],loesung:"Können wir die Rechnung haben",fr:"Pouvons-nous avoir l'addition ?"},
     {id:"s03",lvl:"A2",woerter:["Ich","freue","mich","auf","das","Wochenende"],loesung:"Ich freue mich auf das Wochenende",fr:"J'ai hâte du week-end."},
     {id:"s04",lvl:"A2",woerter:["Sprechen","Sie","bitte","langsam"],loesung:"Sprechen Sie bitte langsam",fr:"Parlez lentement, s'il vous plaît."},
     {id:"s05",lvl:"A2",woerter:["Hast","du","Lust","auf","einen","Kaffee"],loesung:"Hast du Lust auf einen Kaffee",fr:"As-tu envie d'un café ?"},
-    {id:"s06",lvl:"B1",woerter:["Ich","muss","den","Termin","leider","absagen"],loesung:"Ich muss den Termin leider absagen",fr:"Je dois malheureusement annuler le rendez-vous."},
+    {id:"s06",lvl:"B1",woerter:["Ich","muss","den","Termin","absagen"],loesung:"Ich muss den Termin absagen",fr:"Je dois malheureusement annuler le rendez-vous."},
     {id:"s07",lvl:"B1",woerter:["Können","wir","den","Termin","verschieben"],loesung:"Können wir den Termin verschieben",fr:"Pouvons-nous reporter le rendez-vous ?"},
-    {id:"s08",lvl:"B1",woerter:["Ich","schlage","vor","dass","wir","uns","um","acht","treffen"],loesung:"Ich schlage vor dass wir uns um acht treffen",fr:"Je propose qu'on se retrouve à huit heures."},
+    {id:"s08",lvl:"B1",woerter:["Ich","schlage","vor,","dass","wir","uns","um","acht","treffen"],loesung:"Ich schlage vor, dass wir uns um acht treffen",fr:"Je propose qu'on se retrouve à huit heures."},
     {id:"s09",lvl:"B1",woerter:["Ich","kümmere","mich","gleich","darum"],loesung:"Ich kümmere mich gleich darum",fr:"Je m'en occupe tout de suite."},
     {id:"s10",lvl:"B2",woerter:["Das","wirkt","sich","stark","auf","die","Kosten","aus"],loesung:"Das wirkt sich stark auf die Kosten aus",fr:"Cela a un fort impact sur les coûts."},
-    {id:"s11",lvl:"B2",woerter:["Wir","ziehen","einen","Umzug","ernsthaft","in","Erwägung"],loesung:"Wir ziehen einen Umzug ernsthaft in Erwägung",fr:"Nous envisageons sérieusement un déménagement."},
-    {id:"s12",lvl:"C1",woerter:["Mir","ist","durchaus","bewusst","dass","es","schwierig","ist"],loesung:"Mir ist durchaus bewusst dass es schwierig ist",fr:"Je suis tout à fait conscient que c'est difficile."}
+    {id:"s11",lvl:"B2",woerter:["Wir","ziehen","einen","Umzug","in","Erwägung"],loesung:"Wir ziehen einen Umzug in Erwägung",fr:"Nous envisageons sérieusement un déménagement."},
+    {id:"s12",lvl:"C1",woerter:["Mir","ist","durchaus","bewusst,","dass","es","schwierig","ist"],loesung:"Mir ist durchaus bewusst, dass es schwierig ist",fr:"Je suis tout à fait conscient que c'est difficile."}
   ],
 
   /* ---------- Dialoge (hören → nachsprechen) ---------- */
@@ -125,7 +125,7 @@ window.INHALTE = {
       {de:"Ich hätte gern zwei Brötchen, bitte.",fr:"Je voudrais deux petits pains."},
       {de:"Sonst noch etwas?",fr:"Et avec ceci ?"},
       {de:"Nein danke, das ist alles.",fr:"Non merci, c'est tout."},
-      {de:"Das macht ein Euro vierzig.",fr:"Ça fait un euro quarante."}
+      {de:"Das macht einen Euro vierzig.",fr:"Ça fait un euro quarante."}
     ]},
     {id:"d02",lvl:"A2",titel:"Smalltalk mit der Nachbarin",szene:"Bavardage avec la voisine",zeilen:[
       {de:"Hallo! Wie geht es Ihnen?",fr:"Bonjour ! Comment allez-vous ?"},
@@ -187,8 +187,8 @@ window.INHALTE = {
     ]},
     {id:"g03",lvl:"B1",titel:"Le parfait (passé composé)",erkl:"À l'oral on utilise le Perfekt : haben/sein + participe. Mouvement/changement → sein.",items:[
       {q:"Ich ___ einen Termin gemacht.",options:["habe","bin","war"],answer:0,explainFr:"machen → haben : Ich habe … gemacht."},
-      {q:"Wir ___ nach Hause gegangen.",options:["sind","haben","waren"],answer:0,explainFr:"gehen (mouvement) → sein."},
-      {q:"Sie ___ pünktlich angekommen.",options:["ist","hat","war"],answer:0,explainFr:"ankommen → sein : Sie ist angekommen."}
+      {q:"Wir ___ nach Hause gegangen.",options:["sind","haben","seid"],answer:0,explainFr:"gehen (mouvement) → sein."},
+      {q:"Sie ___ pünktlich angekommen.",options:["ist","hat","bist"],answer:0,explainFr:"ankommen → sein : Sie ist angekommen."}
     ]},
     {id:"g04",lvl:"B1",titel:"Verbes de modalité",erkl:"Le verbe modal est conjugué, le verbe principal va à l'infinitif à la fin. « Ich muss arbeiten ».",items:[
       {q:"Ich ___ einen Kaffee bestellen.",options:["möchte","möchten","mag"],answer:0,explainFr:"ich möchte ; bestellen à la fin."},
@@ -201,9 +201,9 @@ window.INHALTE = {
       {q:"Wenn ich Zeit ___, rufe ich dich an.",options:["habe","ich habe","bin"],answer:0,explainFr:"Wenn ich Zeit habe, …"}
     ]},
     {id:"g06",lvl:"B2",titel:"Le Konjunktiv II (politesse / hypothèse)",erkl:"würde + infinitif, ou hätte/wäre/könnte. Pour la politesse et l'irréel : « Ich würde gern… », « Könnten Sie…? »",items:[
-      {q:"___ Sie mir bitte helfen?",options:["Könnten","Können","Konnten"],answer:0,explainFr:"Könnten = forme polie (Konjunktiv II)."},
+      {q:"___ Sie mir bitte helfen?",options:["Könnten","Könntest","Konnten"],answer:0,explainFr:"Könnten = forme polie (Konjunktiv II)."},
       {q:"An deiner Stelle ___ ich das anders machen.",options:["würde","werde","wurde"],answer:0,explainFr:"würde + infinitif = conditionnel."},
-      {q:"Ich ___ gern einen Tisch reservieren.",options:["hätte","habe","hatte"],answer:0,explainFr:"Ich hätte gern… = je voudrais (poli)."}
+      {q:"Ich ___ gern einen Tisch für zwei Personen, bitte.",options:["hätte","habe","hatte"],answer:0,explainFr:"Ich hätte gern… = je voudrais (poli)."}
     ]},
     {id:"g07",lvl:"B2",titel:"Le génitif",erkl:"Le génitif marque l'appartenance : « wegen des Wetters », « die Farbe des Autos ». Articles : des/der.",items:[
       {q:"Wegen ___ Wetters bleiben wir zu Hause.",options:["des","dem","das"],answer:0,explainFr:"wegen + génitif : des Wetters."},
@@ -219,10 +219,10 @@ window.INHALTE = {
 
   /* ---------- Übersetzen (FR→DE, tippen) ; alt = autres réponses acceptées ---------- */
   uebersetzen: [
-    {id:"t01",lvl:"A2",fr:"J'ai un rendez-vous demain.",de:"Ich habe morgen einen Termin",alt:["Ich habe einen Termin morgen"]},
+    {id:"t01",lvl:"A2",fr:"J'ai un rendez-vous demain.",de:"Ich habe morgen einen Termin",alt:["Morgen habe ich einen Termin"]},
     {id:"t02",lvl:"A2",fr:"Je voudrais commander.",de:"Ich möchte bestellen",alt:["Ich würde gern bestellen","Ich möchte gerne bestellen"]},
     {id:"t03",lvl:"A2",fr:"L'addition, s'il vous plaît.",de:"Die Rechnung, bitte",alt:["Die Rechnung bitte","Zahlen bitte"]},
-    {id:"t04",lvl:"A2",fr:"Je suis fatiguée aujourd'hui.",de:"Ich bin heute müde",alt:["Ich bin müde heute"]},
+    {id:"t04",lvl:"A2",fr:"Je suis fatiguée aujourd'hui.",de:"Ich bin heute müde",alt:["Heute bin ich müde"]},
     {id:"t05",lvl:"A2",fr:"As-tu envie d'un café ?",de:"Hast du Lust auf einen Kaffee",alt:[]},
     {id:"t06",lvl:"A2",fr:"Je m'appelle Camille.",de:"Ich heiße Camille",alt:["Ich heisse Camille"]},
     {id:"t07",lvl:"A2",fr:"Où est l'arrêt de bus ?",de:"Wo ist die Bushaltestelle",alt:["Wo ist die Haltestelle"]},
@@ -231,11 +231,11 @@ window.INHALTE = {
     {id:"t10",lvl:"B1",fr:"Je m'habitue peu à peu à l'Allemagne.",de:"Ich gewöhne mich langsam an Deutschland",alt:[]},
     {id:"t11",lvl:"B1",fr:"Je voudrais me plaindre du bruit.",de:"Ich möchte mich über den Lärm beschweren",alt:[]},
     {id:"t12",lvl:"B1",fr:"Je m'en occupe tout de suite.",de:"Ich kümmere mich gleich darum",alt:["Ich kümmere mich sofort darum"]},
-    {id:"t13",lvl:"B1",fr:"Je propose qu'on se retrouve à huit heures.",de:"Ich schlage vor dass wir uns um acht treffen",alt:[]},
+    {id:"t13",lvl:"B1",fr:"Je propose qu'on se retrouve à huit heures.",de:"Ich schlage vor, dass wir uns um acht treffen",alt:[]},
     {id:"t14",lvl:"B2",fr:"Cela a un fort impact sur les coûts.",de:"Das wirkt sich stark auf die Kosten aus",alt:[]},
     {id:"t15",lvl:"B2",fr:"Je cherche un nouveau défi.",de:"Ich suche eine neue Herausforderung",alt:[]},
     {id:"t16",lvl:"B2",fr:"Pourriez-vous m'aider, s'il vous plaît ?",de:"Könnten Sie mir bitte helfen",alt:[]},
-    {id:"t17",lvl:"C1",fr:"Je suis tout à fait conscient que c'est difficile.",de:"Mir ist durchaus bewusst dass es schwierig ist",alt:[]},
+    {id:"t17",lvl:"C1",fr:"Je suis tout à fait conscient que c'est difficile.",de:"Mir ist durchaus bewusst, dass es schwierig ist",alt:[]},
     {id:"t18",lvl:"C1",fr:"La confiance est indispensable.",de:"Vertrauen ist unabdingbar",alt:["Das Vertrauen ist unabdingbar"]}
   ],
 

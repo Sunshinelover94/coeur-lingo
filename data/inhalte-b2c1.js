@@ -34,14 +34,7 @@
   "ex": "Hätte ich die Rechnung früher eingereicht, hätte mir die Krankenkasse die Kosten längst erstattet.",
   "exFr": "Si j'avais soumis la facture plus tôt, la caisse d'assurance maladie m'aurait remboursé les frais depuis longtemps."
  },
- {
-  "id": "vx05",
-  "lvl": "B2",
-  "de": "die Überweisung",
-  "fr": "le virement (bancaire)",
-  "ex": "Die Miete wird per Dauerauftrag überwiesen, sodass ich keine Überweisung mehr vergesse.",
-  "exFr": "Le loyer est viré par ordre permanent, de sorte que je n'oublie plus aucun virement."
- },
+ 
  {
   "id": "vx06",
   "lvl": "B2",
@@ -82,14 +75,7 @@
   "ex": "Nach der Kündigung des Arbeitsvertrags stand ihr eine dreimonatige Frist zu.",
   "exFr": "Après la résiliation du contrat de travail, elle avait droit à un préavis de trois mois."
  },
- {
-  "id": "vx11",
-  "lvl": "B2",
-  "de": "der Termin",
-  "fr": "le rendez-vous",
-  "ex": "Einen Termin beim Bürgeramt bekomme ich erst in sechs Wochen, obwohl ich dringend einen Personalausweis brauche.",
-  "exFr": "Je n'obtiendrai un rendez-vous au service municipal que dans six semaines, bien que j'aie un besoin urgent d'une carte d'identité."
- },
+ 
  {
   "id": "vx12",
   "lvl": "B2",
@@ -98,14 +84,7 @@
   "ex": "Ärzte empfehlen, die Vorsorgeuntersuchung regelmäßig wahrzunehmen, um Krankheiten frühzeitig zu erkennen.",
   "exFr": "Les médecins recommandent de se rendre régulièrement aux examens de dépistage afin de détecter les maladies à un stade précoce."
  },
- {
-  "id": "vx13",
-  "lvl": "B2",
-  "de": "der Mietvertrag",
-  "fr": "le bail, le contrat de location",
-  "ex": "Bevor du den Mietvertrag unterschreibst, solltest du ihn von einem Fachmann prüfen lassen.",
-  "exFr": "Avant de signer le bail, tu devrais le faire vérifier par un spécialiste."
- },
+ 
  {
   "id": "vx14",
   "lvl": "B2",
@@ -114,14 +93,7 @@
   "ex": "Wer die Steuererklärung freiwillig abgibt, bekommt häufig Geld vom Finanzamt zurück.",
   "exFr": "Celui qui remet volontairement sa déclaration d'impôts récupère souvent de l'argent auprès du fisc."
  },
- {
-  "id": "vx15",
-  "lvl": "B2",
-  "de": "die Voraussetzung",
-  "fr": "la condition (préalable), le prérequis",
-  "ex": "Gute Deutschkenntnisse sind die Voraussetzung dafür, in diesem Beruf Fuß zu fassen.",
-  "exFr": "De bonnes connaissances en allemand sont la condition pour prendre pied dans ce métier."
- },
+ 
  {
   "id": "vx16",
   "lvl": "B2",
@@ -130,14 +102,7 @@
   "ex": "Das Unternehmen wirbt damit, nachhaltig zu produzieren, doch viele zweifeln an diesen Versprechen.",
   "exFr": "L'entreprise se vante de produire de manière durable, mais beaucoup doutent de ces promesses."
  },
- {
-  "id": "vx17",
-  "lvl": "B2",
-  "de": "der Antrag",
-  "fr": "la demande (administrative), le formulaire de demande",
-  "ex": "Der Antrag auf Elterngeld wurde abgelehnt, weil eine Bescheinigung fehlte.",
-  "exFr": "La demande d'allocation parentale a été rejetée parce qu'un justificatif manquait."
- },
+ 
  {
   "id": "vx18",
   "lvl": "B2",
@@ -178,14 +143,7 @@
   "ex": "Nach langen Verhandlungen konnten sich beide Seiten endlich auf einen Kompromiss einigen.",
   "exFr": "Après de longues négociations, les deux parties ont enfin pu se mettre d'accord sur un compromis."
  },
- {
-  "id": "vx23",
-  "lvl": "B2",
-  "de": "die Frist",
-  "fr": "le délai, l'échéance",
-  "ex": "Die Frist für den Widerspruch beträgt einen Monat; danach ist der Bescheid rechtskräftig.",
-  "exFr": "Le délai pour faire opposition est d'un mois ; passé ce délai, la décision devient définitive."
- },
+ 
  {
   "id": "vx24",
   "lvl": "B2",
@@ -194,22 +152,8 @@
   "ex": "Um näher an der Arbeit zu wohnen, nimmt sie eine deutlich höhere Miete in Kauf.",
   "exFr": "Pour habiter plus près de son travail, elle accepte un loyer nettement plus élevé."
  },
- {
-  "id": "vy01",
-  "lvl": "C1",
-  "de": "der Ermessensspielraum",
-  "fr": "la marge d'appréciation, le pouvoir discrétionnaire",
-  "ex": "Die Sachbearbeiterin verfügt bei der Bewilligung des Antrags über einen erheblichen Ermessensspielraum, den sie nicht willkürlich ausschöpfen darf.",
-  "exFr": "L'agente administrative dispose d'une marge d'appréciation considérable pour l'octroi de la demande, qu'elle ne saurait exploiter de manière arbitraire."
- },
- {
-  "id": "vy02",
-  "lvl": "C1",
-  "de": "etwas in Kauf nehmen",
-  "fr": "accepter (un inconvénient), s'accommoder de, prendre le risque de",
-  "ex": "Wer eine Wohnung in zentraler Lage sucht, muss in Ballungsräumen horrende Mieten in Kauf nehmen.",
-  "exFr": "Quiconque cherche un logement en centre-ville doit, dans les agglomérations, s'accommoder de loyers exorbitants."
- },
+ 
+ 
  {
   "id": "vy03",
   "lvl": "C1",
@@ -242,14 +186,7 @@
   "ex": "Die überfällige Reform des Gesundheitssystems wird seit Jahren auf die lange Bank geschoben, statt sie endlich beherzt anzugehen.",
   "exFr": "La réforme attendue du système de santé est repoussée aux calendes grecques depuis des années, au lieu d'être enfin abordée résolument."
  },
- {
-  "id": "vy07",
-  "lvl": "C1",
-  "de": "die Nebenkostenabrechnung",
-  "fr": "le décompte des charges locatives",
-  "ex": "Die Vermieterin ist verpflichtet, die jährliche Nebenkostenabrechnung nachvollziehbar aufzuschlüsseln und Belege auf Verlangen vorzulegen.",
-  "exFr": "La propriétaire est tenue de détailler le décompte annuel des charges de manière compréhensible et de produire les justificatifs sur demande."
- },
+ 
  {
   "id": "vy08",
   "lvl": "C1",
@@ -367,7 +304,7 @@
  {
   "id": "lx03",
   "lvl": "B2",
-  "satz": "Der Vermieter darf die Kaution erst zurückzahlen, nachdem er sich vom ___ der Wohnung überzeugt hat.",
+  "satz": "Der Vermieter muss die Kaution erst zurückzahlen, nachdem er sich vom ___ der Wohnung überzeugt hat.",
   "options": [
    "Zustand",
    "Anstand",
@@ -643,22 +580,8 @@
  {
   "id": "sx05",
   "lvl": "B2",
-  "woerter": [
-   "Trotz",
-   "der",
-   "hohen",
-   "Lebenshaltungskosten",
-   "weigert",
-   "sich",
-   "die",
-   "Bank,",
-   "uns",
-   "einen",
-   "Kredit",
-   "zu",
-   "gewähren"
-  ],
-  "loesung": "Trotz der hohen Lebenshaltungskosten weigert sich die Bank, uns einen Kredit zu gewähren",
+  "woerter": ["Trotz","unseres","sicheren","Einkommens","weigert","sich","die","Bank,","uns","einen","Kredit","zu","gewähren"],
+  "loesung": "Trotz unseres sicheren Einkommens weigert sich die Bank, uns einen Kredit zu gewähren",
   "fr": "Malgré le coût de la vie élevé, la banque refuse de nous accorder un crédit"
  },
  {
@@ -995,7 +918,7 @@
     "explainFr": "« Ungeachtet dessen, dass » = nonobstant le fait que, registre très soutenu. « Obwohl trotzdem » est un pléonasme fautif et « wegen dass » n'existe pas. La construction correcte combine la locution concessive avec une subordonnée en « dass »."
    },
    {
-    "q": "___ sich die Behörde um Transparenz bemüht, bleibt das Verfahren für Laien undurchschaubar. (= si fort que … s'efforce, la concession demeure)",
+    "q": "___ die Behörde um Transparenz bemüht, bleibt das Verfahren für Laien undurchschaubar. (= si fort que … s'efforce, la concession demeure)",
     "options": [
      "Sosehr sich",
      "Sodass sich",
@@ -1282,7 +1205,7 @@
   "fr": "L'administration fiscale exige désormais que toute déduction soit étayée par des justificatifs, faute de quoi le contribuable s'expose à un redressement.",
   "de": "Das Finanzamt verlangt nunmehr, dass jeder Abzug durch Belege untermauert wird, andernfalls setzt sich der Steuerpflichtige einer Nachforderung aus.",
   "alt": [
-   "Die Finanzverwaltung fordert mittlerweile, dass jede abzugsfähige Position belegmäßig nachgewiesen wird, widrigenfalls dem Steuerpflichtigen eine Steuernachzahlung droht.",
+   "Die Finanzverwaltung fordert mittlerweile, dass jede abzugsfähige Position belegmäßig nachgewiesen wird, widrigenfalls droht dem Steuerpflichtigen eine Steuernachzahlung.",
    "Das Finanzamt verlangt nunmehr, dass jeder Abzug durch Belege nachgewiesen wird, andernfalls droht dem Steuerpflichtigen eine Steuernachforderung."
   ]
  },
@@ -1501,7 +1424,7 @@
  {
   "id": "kx01",
   "lvl": "B2",
-  "prompt": "Wenn ich an deiner Stelle wäre, ___ (kündigen) ich diesen Job sofort.",
+  "prompt": "Wenn ich an deiner Stelle wäre, ___ ich diesen Job sofort kündigen. (werden, Konjunktiv II)",
   "answer": "würde",
   "hintFr": "Konjunktiv II irréel au présent : « würde » + infinitif (kündigen reste à la fin). Sens : « je démissionnerais »."
  },
@@ -1529,7 +1452,7 @@
  {
   "id": "kx05",
   "lvl": "B2",
-  "prompt": "Sie ärgert sich seit Wochen ___ (sich ärgern über → die schlechte Behandlung) bei ihrer Krankenkasse.",
+  "prompt": "Sie ärgert sich seit Wochen ___ die schlechte Behandlung bei ihrer Krankenkasse. (sich ärgern + Präposition)",
   "answer": "über",
   "hintFr": "Verbe à préposition : « sich ärgern über » + accusatif = s'énerver à propos de. Ici on attend la préposition « über »."
  },
@@ -1557,7 +1480,7 @@
  {
   "id": "ky01",
   "lvl": "C1",
-  "prompt": "Konjunktiv II (Vergangenheit): Hätte die Behörde den Bescheid fristgerecht zugestellt, ___ der Widerspruch nicht verfristet ___ (sein).",
+  "prompt": "Konjunktiv II (Vergangenheit): Hätte die Mieterin den Widerspruch fristgerecht eingelegt, ___ dieser nicht verfristet ___ (sein).",
   "answer": "wäre ... gewesen",
   "hintFr": "Konjunktiv II passé de 'sein' (irréel du passé, proposition principale après une conditionnelle sans 'wenn'). Le verbe est encadré : 'wäre' juste après la subordonnée, 'gewesen' à la fin. Contexte administratif : si l'autorité avait notifié la décision dans les délais, l'opposition n'aurait pas été hors délai."
  },
@@ -1578,14 +1501,14 @@
  {
   "id": "ky04",
   "lvl": "C1",
-  "prompt": "Plusquamperfekt: Kaum ___ sie die Kündigung ___ (aussprechen), bereute der Arbeitgeber seine vorschnelle Entscheidung.",
+  "prompt": "Plusquamperfekt: Kaum ___ der Arbeitgeber die Kündigung ___ (aussprechen), bereute er seine vorschnelle Entscheidung.",
   "answer": "hatte ... ausgesprochen",
   "hintFr": "Plus-que-parfait de 'aussprechen' (verbe à particule séparable). Avec 'kaum' en tête, le verbe conjugué 'hatte' passe en position 1 (inversion) et le participe 'ausgesprochen' va à la fin. Contexte travail : à peine avait-elle prononcé le licenciement que l'employeur regretta sa décision précipitée."
  },
  {
   "id": "ky05",
   "lvl": "C1",
-  "prompt": "Konjunktiv II (Höflichkeit/Vorschlag): Es ___ sich (anbieten), die ausstehenden Honorare in mehreren Raten zu begleichen, um Ihre Liquidität zu schonen.",
+  "prompt": "Konjunktiv II (Höflichkeit/Vorschlag): Es ___ sich an (anbieten), die ausstehenden Honorare in mehreren Raten zu begleichen, um Ihre Liquidität zu schonen.",
   "answer": "böte",
   "hintFr": "Konjunktiv II synthétique de 'sich anbieten' (3e pers. sing.), registre soutenu (forme contractée 'böte' plutôt que 'würde sich anbieten'). Contexte argent : il serait opportun de régler les honoraires en plusieurs échéances pour ménager votre trésorerie."
  },
@@ -1767,7 +1690,7 @@
     "fr": "Figure-toi que mon propriétaire a augmenté le loyer de presque douze pour cent, alors qu'il l'avait déjà augmenté l'an dernier. Je commence à me demander si c'est seulement légal."
    },
    {
-    "de": "Das klingt heikel. In den meisten Städten gilt eine Kappungsgrenze, das heißt, die Miete darf innerhalb von drei Jahren um höchstens zwanzig Prozent steigen, in Gegenden mit knappem Wohnraum sogar nur um fünfzehn.",
+    "de": "Das klingt heikel. Es gibt eine Kappungsgrenze, das heißt, die Miete darf innerhalb von drei Jahren um höchstens zwanzig Prozent steigen, in Gegenden mit knappem Wohnraum sogar nur um fünfzehn.",
     "fr": "Ça paraît délicat. Dans la plupart des villes, il existe un plafonnement, c'est-à-dire que le loyer ne peut augmenter que de vingt pour cent au maximum sur trois ans, voire seulement quinze dans les régions où les logements sont rares."
    },
    {

@@ -687,7 +687,7 @@ window.I18N_EN = {
   },
   {
    "id": "ly07",
-   "en": "„Vorurteile zementieren“ = to cement / entrench prejudices (common image in formal register). „fundamentieren“ does not exist (one says „fundieren“), and „stabilisieren“ is too neutral and does not collocate with „Vorurteile“."
+   "en": "„Vorurteile zementieren“ = to cement / entrench prejudices (common image in formal register). „fundamentieren“ is a construction term (to lay a foundation) and „stabilisieren“ is too neutral; neither collocates with „Vorurteile“."
   },
   {
    "id": "ly08",
@@ -701,7 +701,7 @@ window.I18N_EN = {
   },
   {
    "id": "s02",
-   "en": "Could we have the bill, please?"
+   "en": "Could we have the bill?"
   },
   {
    "id": "s03",
@@ -717,7 +717,7 @@ window.I18N_EN = {
   },
   {
    "id": "s06",
-   "en": "Unfortunately, I have to cancel the appointment."
+   "en": "I have to cancel the appointment."
   },
   {
    "id": "s07",
@@ -737,7 +737,7 @@ window.I18N_EN = {
   },
   {
    "id": "s11",
-   "en": "We're seriously considering a move."
+   "en": "We're considering a move."
   },
   {
    "id": "s12",
@@ -761,7 +761,7 @@ window.I18N_EN = {
   },
   {
    "id": "sx05",
-   "en": "Despite the high cost of living, the bank refuses to grant us a loan."
+   "en": "Despite our secure income, the bank refuses to grant us a loan."
   },
   {
    "id": "sx06",
@@ -1373,7 +1373,7 @@ window.I18N_EN = {
   },
   {
    "id": "ky01",
-   "hintEn": "Past Konjunktiv II of 'sein' (past unreal, main clause following a 'wenn'-less conditional). The verb forms a bracket: 'wäre' right after the subordinate clause, 'gewesen' at the end. Administrative context: had the authority served the decision on time, the objection would not have been out of time."
+   "hintEn": "Past Konjunktiv II of 'sein' (past unreal, main clause following a 'wenn'-less conditional). The verb forms a bracket: 'wäre' right after the subordinate clause, 'gewesen' at the end. Administrative context: had the tenant filed the objection on time, it would not have been out of time."
   },
   {
    "id": "ky02",
@@ -1385,7 +1385,7 @@ window.I18N_EN = {
   },
   {
    "id": "ky04",
-   "hintEn": "Past perfect of 'aussprechen' (separable-prefix verb). With 'kaum' at the front, the conjugated verb 'hatte' moves to position 1 (inversion) and the participle 'ausgesprochen' goes to the end. Workplace context: she had barely announced the dismissal when the employer regretted his hasty decision."
+   "hintEn": "Past perfect of 'aussprechen' (separable-prefix verb). With 'kaum' at the front, the conjugated verb 'hatte' moves to position 2 (right after 'kaum') and the participle 'ausgesprochen' goes to the end. Workplace context: the employer had barely announced the dismissal when he regretted his hasty decision."
   },
   {
    "id": "ky05",
@@ -1595,7 +1595,7 @@ window.I18N_EN = {
    "id": "dx01",
    "en": [
     "Get this — my landlord raised the rent by almost twelve percent, even though he already bumped it up last year. I'm starting to wonder whether that's even allowed.",
-    "That sounds tricky. In most cities there's a cap, meaning the rent can only go up by twenty percent at most over three years, or even just fifteen in areas where housing is scarce.",
+    "That sounds tricky. There's a legal cap, meaning the rent can only go up by twenty percent at most over three years, or even just fifteen in areas where housing is scarce.",
     "I had no idea. Even so, I hardly dare complain, because I'm afraid he'll give me notice if I do.",
     "I understand that worry, but he can't just give you notice over a legitimate complaint. If I were you, I'd get advice from the tenants' association before you sign anything.",
     "That's good advice. I think I should object to the increase in writing rather than just accepting it without a word.",
