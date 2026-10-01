@@ -134,6 +134,17 @@ code{background:#f3e6ec;padding:2px 6px;border-radius:6px;font-size:13px;color:v
 .owlcard{display:flex;align-items:center;gap:12px;cursor:pointer;border:1.5px solid var(--gold);background:#fffaf0}
 .owl{font-size:30px;animation:owlbob 2.4s ease-in-out infinite}
 @keyframes owlbob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-5px) rotate(4deg)}}
+/* Herzschlag-Begrüßung (1× pro Tag beim Öffnen, blockiert nie: pointer-events:none) */
+#hello{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:linear-gradient(135deg,var(--coral),var(--coral-d));color:#fff;text-align:center;padding:24px;pointer-events:none;animation:hellofade 1.9s ease forwards}
+#hello .heart{font-size:84px;animation:heartbeat 1.2s ease}
+#hello .gde{font-size:26px;font-weight:800;opacity:0;animation:hellotext .5s .55s ease forwards}
+#hello .gen{font-size:14px;opacity:0;animation:hellotext .5s .75s ease forwards}
+#hello.out{animation:hellofadeout .3s ease forwards}
+@keyframes heartbeat{0%{transform:scale(.6)}15%{transform:scale(1.15)}30%{transform:scale(.95)}45%{transform:scale(1.2)}70%{transform:scale(1)}100%{transform:scale(1.1)}}
+@keyframes hellotext{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes hellofade{0%,80%{opacity:1}100%{opacity:0}}
+@keyframes hellofadeout{to{opacity:0}}
+@media (prefers-reduced-motion:reduce){#hello .heart{animation:none}#hello .gde,#hello .gen{animation:none;opacity:1}}
 body.goldday header{background:linear-gradient(135deg,var(--gold),#d99414)}
 body.goldday .brand{color:#5a3a00}
 /* Wort-Antippen (S8) */
@@ -663,7 +674,7 @@ function weeklyReportIfDue(){
 
 /* ---------- Feedback-Button (S11): 🐞 + html2canvas (self-hosted) + 50-entry error ring buffer + offline queue.
    No backend: reports go via the existing Web3Forms/freundEmail infra, same as coupon/badge mails. ---------- */
-const APP_VERSION="v15"; // muss mit sw.js' CACHE-Version mitgezogen werden (bei jedem Cache-Bump anpassen)
+const APP_VERSION="v16"; // muss mit sw.js' CACHE-Version mitgezogen werden (bei jedem Cache-Bump anpassen)
 const ERRBUF_KEY="dl_errbuf",FBQUEUE_KEY="dl_fbqueue";
 function pushErrBuf(entry){
   let buf=[];try{buf=JSON.parse(localStorage.getItem(ERRBUF_KEY))||[];}catch(e){buf=[];}
@@ -1392,6 +1403,28 @@ async function toggleRecord(btn){
 function playMine(){if(recURL){try{new Audio(recURL).play();}catch(e){}}}
 
 /* ---------- boot ---------- */
+/* ---------- Herzschlag-Begrüßung ---------- */
+const HELLO={ // [ab Stunde, Varianten [de, en]] — {n} = Name
+  5:[["Guten Morgen, {n}! ☀️","Good morning, {n}!"],["Ausgeschlafen, {n}?","Slept well, {n}?"]],
+  11:[["Mahlzeit, {n}! 🥨","Enjoy your lunch, {n}!"],["Hallo, {n}! Schon gegessen?","Hi {n}! Had lunch yet?"]],
+  14:[["Hallo, {n}! 🌸","Hello, {n}!"],["Schön, dass du da bist, {n}!","So nice that you're here, {n}!"],["Hey {n}, wie geht's? 😊","Hey {n}, how are you?"]],
+  18:[["Guten Abend, {n}! 🌆","Good evening, {n}!"],["Na, {n}, wie war dein Tag?","So {n}, how was your day?"]],
+  22:[["Na, du Nachtschwärmerin? 🌙","Hey there, night owl?"],["Noch wach, {n}? ✨","Still awake, {n}?"]]
+};
+function hello(){
+  if(S.helloDate===todayStr())return;
+  S.helloDate=todayStr();save();
+  const h=new Date().getHours(),slot=h>=22||h<5?22:h>=18?18:h>=14?14:h>=11?11:5;
+  const opts=HELLO[slot],[de,en]=opts[Math.abs(dayIndex())%opts.length];
+  const n=(S.user.name||"").trim()||t("nameFallback");
+  const el=document.createElement("div");el.id="hello";
+  el.innerHTML=`<div class="heart">❤️</div><div class="gde">${esc(de.replace("{n}",n))}</div><div class="gen">${esc(en.replace("{n}",n))}</div>`;
+  document.body.appendChild(el);
+  const end=()=>{document.removeEventListener("pointerdown",skip,true);el.remove();};
+  const skip=()=>{el.classList.add("out");setTimeout(end,300);};
+  document.addEventListener("pointerdown",skip,true);
+  el.addEventListener("animationend",e=>{if(e.animationName==="hellofade")end();});
+}
 function boot(){
   mergeI18nEN();applyThemaTags();
   if(!S){onboarding();return;}
@@ -1403,7 +1436,7 @@ function boot(){
   if(!S.wordCache)S.wordCache={};
   if(!S.counters)S.counters={};
   if(!S.eggs)S.eggs={revealed:{},goldDate:"",owl:false};
-  reconcileStreak();rolloverXp();advanceLiga();ensureChecklist();weeklyReportIfDue();renderHeader();show("home");
+  reconcileStreak();rolloverXp();advanceLiga();ensureChecklist();weeklyReportIfDue();renderHeader();show("home");hello();
 }
 boot();
 setTimeout(()=>{if(S)flushFeedbackQueue(true);},1800); // stiller Retry für wartende Feedback-Reports
